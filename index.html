@@ -257,8 +257,28 @@ td.code{font-family:var(--f-mono)}
   <div class="modal-bg" id="modal" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle"><div class="mb"><h2 id="mTitle"></h2><div id="mBody"></div></div><div class="mActs" id="mActs"></div></div></div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" onerror="document.getElementById('loading').textContent='โหลดเอนจิน 3D ไม่สำเร็จ ลองรีเฟรชหน้าอีกครั้ง'"></script>
 <script>
+(function(){
+  var L=document.getElementById('loading');
+  function show(m){L.hidden=false;L.innerHTML='<div style="max-width:520px"><b>เปิดเกมไม่สำเร็จ</b><br><span style="font-size:14px;color:#a3b3bf;font-family:system-ui,sans-serif">'+String(m).replace(/</g,'&lt;')+'</span><br><span style="font-size:13px;color:#a3b3bf;font-family:system-ui,sans-serif">ส่งข้อความนี้ให้ Claude ดูได้เลย</span></div>'}
+  window.__gameFail=show;
+  window.addEventListener('error',function(e){if(window.__booted)return;show((e.message||'ข้อผิดพลาดไม่ทราบสาเหตุ')+(e.lineno?' (บรรทัด '+e.lineno+')':''))});
+  var srcs=['https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js','https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js','https://unpkg.com/three@0.128.0/build/three.min.js'];
+  function webgl(){try{var c=document.createElement('canvas');return !!(window.WebGLRenderingContext&&(c.getContext('webgl')||c.getContext('experimental-webgl')))}catch(e){return false}}
+  function run(){
+    if(!webgl()){show('เบราว์เซอร์หรืออุปกรณ์นี้ปิด WebGL อยู่ ลองเปิดด้วย Chrome หรือ Safari และเปิด Hardware acceleration ในการตั้งค่าเบราว์เซอร์');return}
+    L.textContent='กำลังสร้างเมืองสมุทรปราการ…';
+    var s=document.createElement('script');s.textContent=document.getElementById('game').textContent;document.body.appendChild(s);
+  }
+  function load(i){
+    if(i>=srcs.length){show('โหลดเอนจิน 3D (three.js) ไม่ได้จากทุกแหล่ง ตรวจการเชื่อมต่ออินเทอร์เน็ต หรือถ้าเปิดจากหน้าตัวอย่างไฟล์ในแอป ให้ดาวน์โหลดแล้วเปิดด้วยเบราว์เซอร์แทน');return}
+    L.textContent='กำลังโหลดเอนจิน 3D… ('+(i+1)+'/'+srcs.length+')';
+    var s=document.createElement('script');s.src=srcs[i];s.onload=function(){if(window.THREE)run();else load(i+1)};s.onerror=function(){load(i+1)};document.head.appendChild(s);
+  }
+  load(0);
+})();
+</script>
+<script type="text/plain" id="game">
 /* =====================================================================
    DATA — work (CMMS) side
    ===================================================================== */
@@ -1784,8 +1804,7 @@ function boot(){
   updateHud(true); flushModal(); requestAnimationFrame(frame);
 }
 window.claude?.hot?.snapshot?.(()=>({S}));
-if(typeof THREE==='undefined'){document.getElementById('loading').textContent='โหลดเอนจิน 3D ไม่สำเร็จ ลองรีเฟรชหน้าอีกครั้ง'}
-else{const go=()=>{try{boot()}catch(e){console.error(e);document.getElementById('loading').textContent='เริ่มเกมไม่สำเร็จ: '+e.message}};
+{const go=()=>{try{boot();window.__booted=true}catch(e){console.error(e);window.__gameFail('เริ่มเกมไม่สำเร็จ: '+e.message+(e.stack?' · '+String(e.stack).split('\n')[1]:''))}};
   const ready=window.claude?.hot?.ready;
   Promise.race([document.fonts?document.fonts.ready:Promise.resolve(),new Promise(r=>setTimeout(r,1500))]).then(()=>ready?ready(()=>go()):go())}
 
