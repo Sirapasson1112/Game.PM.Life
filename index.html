@@ -1576,8 +1576,15 @@ function start(data){
   const f=S.drive?S.veh[S.drive]:S.p; CAMX=f.x;CAMY=f.y;
   updateHud(true); flushModal(); requestAnimationFrame(frame);
 }
-window.claude?.hot?.snapshot?.(()=>({S}));
-window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+try{window.claude&&window.claude.hot&&window.claude.hot.snapshot&&window.claude.hot.snapshot(()=>({S}))}catch(e){}
+(function(){
+  let hd={};try{hd=(window.claude&&window.claude.hot&&window.claude.hot.data)||{}}catch(e){}
+  try{start(hd)}catch(e){
+    console.error(e);
+    const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;display:grid;place-items:center;background:#0d1418;color:#e9eff3;z-index:99;padding:20px;text-align:center;font:16px system-ui,sans-serif';
+    d.textContent='\u0e40\u0e1b\u0e34\u0e14\u0e40\u0e01\u0e21\u0e44\u0e21\u0e48\u0e2a\u0e33\u0e40\u0e23\u0e47\u0e08: '+e.message;document.body.appendChild(d);
+  }
+})();
 </script>
 </body>
 </html>
