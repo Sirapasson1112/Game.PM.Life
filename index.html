@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="google" content="notranslate">
 <title>PM Life สมุทรปราการ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -219,7 +220,7 @@ td.code{font-family:var(--f-mono)}
 @media (prefers-reduced-motion:reduce){.toast{animation:none}#fade{transition:none}}
 </style>
 </head>
-<body>
+<body translate="no">
 
 <div id="app">
   <canvas id="cv"></canvas>
@@ -268,7 +269,7 @@ td.code{font-family:var(--f-mono)}
   function run(){
     if(!webgl()){show('เบราว์เซอร์หรืออุปกรณ์นี้ปิด WebGL อยู่ ลองเปิดด้วย Chrome หรือ Safari และเปิด Hardware acceleration ในการตั้งค่าเบราว์เซอร์');return}
     L.textContent='กำลังสร้างเมืองสมุทรปราการ…';
-    var s=document.createElement('script');s.textContent=document.getElementById('game').textContent;document.body.appendChild(s);
+    try{window.__startGame()}catch(e){console.error(e);show((e&&e.message)||String(e))}
   }
   function load(i){
     if(i>=srcs.length){show('โหลดเอนจิน 3D (three.js) ไม่ได้จากทุกแหล่ง ตรวจการเชื่อมต่ออินเทอร์เน็ต หรือถ้าเปิดจากหน้าตัวอย่างไฟล์ในแอป ให้ดาวน์โหลดแล้วเปิดด้วยเบราว์เซอร์แทน');return}
@@ -278,7 +279,8 @@ td.code{font-family:var(--f-mono)}
   load(0);
 })();
 </script>
-<script type="text/plain" id="game">
+<script>
+window.__startGame=function(){
 /* =====================================================================
    DATA — work (CMMS) side
    ===================================================================== */
@@ -1808,6 +1810,8 @@ window.claude?.hot?.snapshot?.(()=>({S}));
   const ready=window.claude?.hot?.ready;
   Promise.race([document.fonts?document.fonts.ready:Promise.resolve(),new Promise(r=>setTimeout(r,1500))]).then(()=>ready?ready(()=>go()):go())}
 
+
+};
 </script>
 </body>
 </html>
