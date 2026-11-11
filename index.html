@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="th">
+<html lang="th" translate="no" class="notranslate">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -260,6 +260,7 @@ td.code{font-family:var(--f-mono)}
 
 <script>
 (function(){
+  try{document.documentElement.setAttribute('translate','no');document.documentElement.classList.add('notranslate');document.documentElement.lang='th'}catch(e){}
   var L=document.getElementById('loading');
   function show(m){L.hidden=false;L.innerHTML='<div style="max-width:520px"><b>เปิดเกมไม่สำเร็จ</b><br><span style="font-size:14px;color:#a3b3bf;font-family:system-ui,sans-serif">'+String(m).replace(/</g,'&lt;')+'</span><br><span style="font-size:13px;color:#a3b3bf;font-family:system-ui,sans-serif">ส่งข้อความนี้ให้ Claude ดูได้เลย</span></div>'}
   window.__gameFail=show;
@@ -269,7 +270,7 @@ td.code{font-family:var(--f-mono)}
   function run(){
     if(!webgl()){show('เบราว์เซอร์หรืออุปกรณ์นี้ปิด WebGL อยู่ ลองเปิดด้วย Chrome หรือ Safari และเปิด Hardware acceleration ในการตั้งค่าเบราว์เซอร์');return}
     L.textContent='กำลังสร้างเมืองสมุทรปราการ…';
-    try{window.__startGame()}catch(e){console.error(e);show((e&&e.message)||String(e))}
+    setTimeout(function(){try{window.__startGame()}catch(e){console.error(e);show((e&&e.message)||String(e))}},30)
   }
   function load(i){
     if(i>=srcs.length){show('โหลดเอนจิน 3D (three.js) ไม่ได้จากทุกแหล่ง ตรวจการเชื่อมต่ออินเทอร์เน็ต หรือถ้าเปิดจากหน้าตัวอย่างไฟล์ในแอป ให้ดาวน์โหลดแล้วเปิดด้วยเบราว์เซอร์แทน');return}
@@ -1781,35 +1782,36 @@ function update(dt){
   if(S.site&&S.scene==='out'){const a=AM[findWO(S.site.wo)?.asset];if(a&&Math.hypot(a.x-S.p.x,a.y-S.p.y)>14){if(S.site.em){const f=S.fails.find(x=>x.id===S.site.wo);if(f)f.working=false}S.site=null;toast('ออกจากหน้างานแล้ว ใบตรวจที่ยังไม่บันทึกถูกยกเลิก','warn')}}
 }
 function frame(now){
-  const dt=Math.min(.05,(now-last)/1000); last=now;
-  if(S){
-    const paused=PANEL||modalOpen();
-    if(!paused) update(dt); else MOVING=false;
-    findTargets();
-    updateWorld3D(dt,now);
-    R3.render(scene,camera);
-    placeLabels();
-    hudT+=dt; saveT+=dt;
-    if(hudT>.2){hudT=0;updateHud();drawMini();renderToasts();if(!paused&&checkVitals()){closePanel()}flushModal()}
-    if(saveT>5){saveT=0;save()}
-  }
+  try{
+    const dt=Math.min(.05,(now-last)/1000); last=now;
+    if(S){
+      const paused=PANEL||modalOpen();
+      if(!paused) update(dt); else MOVING=false;
+      findTargets();
+      updateWorld3D(dt,now);
+      R3.render(scene,camera);
+      placeLabels();
+      hudT+=dt; saveT+=dt;
+      if(hudT>.2){hudT=0;updateHud();drawMini();renderToasts();if(!paused&&checkVitals()){closePanel()}flushModal()}
+      if(saveT>5){saveT=0;save()}
+    }
+  }catch(e){console.error(e);window.__gameFail('เกมหยุดทำงาน: '+e.message+(e.stack?' · '+String(e.stack).split('\n')[1]:''));return}
   requestAnimationFrame(frame);
 }
 /* =====================================================================
    BOOT
    ===================================================================== */
 function boot(){
+  const L=document.getElementById('loading');
   buildWorld(); initTraffic(); buildOutdoor(); buildInterior('home'); buildInterior('office'); decorHome(); decorOffice(); resize();
-  const saved=(window.claude?.hot?.data&&window.claude.hot.data.S)||load();
-  if(saved&&saved.ver===2){S=saved}else{newGame();MODALQ.push(howTo)}
-  document.getElementById('loading').hidden=true;
+  let saved=null;try{saved=(window.claude&&window.claude.hot&&window.claude.hot.data&&window.claude.hot.data.S)||load()}catch(e){}
+  if(saved&&saved.ver===2&&saved.veh&&saved.p){S=saved}else{newGame();MODALQ.push(howTo)}
+  R3.render(scene,camera);
+  L.hidden=true;
   updateHud(true); flushModal(); requestAnimationFrame(frame);
 }
-window.claude?.hot?.snapshot?.(()=>({S}));
-{const go=()=>{try{boot();window.__booted=true}catch(e){console.error(e);window.__gameFail('เริ่มเกมไม่สำเร็จ: '+e.message+(e.stack?' · '+String(e.stack).split('\n')[1]:''))}};
-  const ready=window.claude?.hot?.ready;
-  Promise.race([document.fonts?document.fonts.ready:Promise.resolve(),new Promise(r=>setTimeout(r,1500))]).then(()=>ready?ready(()=>go()):go())}
-
+try{window.claude&&window.claude.hot&&window.claude.hot.snapshot&&window.claude.hot.snapshot(()=>({S}))}catch(e){}
+try{boot();window.__booted=true}catch(e){console.error(e);window.__gameFail('เริ่มเกมไม่สำเร็จ: '+e.message+(e.stack?' · '+String(e.stack).split('\n')[1]:''))}
 
 };
 </script>
