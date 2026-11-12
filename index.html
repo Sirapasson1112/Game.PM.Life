@@ -227,7 +227,7 @@ body.touch #toasts{bottom:calc(232px + env(safe-area-inset-bottom,0px))}
 #tbtns button{background:rgba(9,15,24,.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.18);box-shadow:0 8px 18px -8px rgba(0,0,0,.7)}
 #tbtns button.e{background:var(--grad);border-color:transparent;box-shadow:0 0 22px rgba(255,138,30,.55)}
 #vig{position:fixed;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at center,transparent 58%,rgba(0,0,0,.34) 100%)}
-@media (hover:hover) and (pointer:fine){#game{filter:saturate(1.12) contrast(1.04)}}
+#game{filter:saturate(1.32) contrast(1.06) brightness(1.04)}
 #splash{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:16px;background:radial-gradient(ellipse at 25% 15%,rgba(255,138,30,.28),transparent 50%),radial-gradient(ellipse at 85% 90%,rgba(79,216,255,.18),transparent 55%),linear-gradient(160deg,#0c1424,#05080d);transition:opacity .6s}
 #splash.out{opacity:0;pointer-events:none}
 #splash::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse at center,#000 25%,transparent 75%);mask-image:radial-gradient(ellipse at center,#000 25%,transparent 75%)}
@@ -258,7 +258,7 @@ body.touch #toasts{bottom:calc(232px + env(safe-area-inset-bottom,0px))}
 #gInfo{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-end;max-width:320px;margin-top:5px}
 #gInfo .pill{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11.5px;font-weight:600;background:rgba(0,0,0,.6)!important}
 #tasks{top:calc(215px + env(safe-area-inset-top,0px));background:rgba(0,0,0,.5);border:0;border-radius:6px;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
-#radarWrap{left:max(18px, env(safe-area-inset-left,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));width:210px}
+#radarWrap{left:max(18px, env(safe-area-inset-left,0px));top:calc(16px + env(safe-area-inset-top,0px));bottom:auto;width:210px}
 #radar{display:block;width:210px;height:210px;border-radius:50%;box-shadow:0 0 0 3px rgba(0,0,0,.8),0 0 0 5px rgba(255,255,255,.14),0 12px 30px rgba(0,0,0,.6)}
 .rbars{display:grid;grid-template-columns:2fr 1fr 1fr;gap:4px;margin-top:9px}
 .rbars b{display:block;height:8px;background:rgba(0,0,0,.65);border:1px solid #000;position:relative;overflow:hidden}
@@ -266,7 +266,7 @@ body.touch #toasts{bottom:calc(232px + env(safe-area-inset-bottom,0px))}
 #rb1{background:#5fcf4a} #rb2{background:#e9b23a} #rb3{background:#4fc4e8}
 #objective{left:50%;transform:translateX(-50%);bottom:calc(64px + env(safe-area-inset-bottom,0px));font-family:var(--body);font-size:18px;font-weight:500;color:#fff;text-shadow:0 2px 3px #000,0 0 12px rgba(0,0,0,.95);text-align:center;max-width:min(78vw,640px)}
 #objective b{color:#ffd23f;font-weight:700}
-#prompt{top:calc(16px + env(safe-area-inset-top,0px));left:max(18px, env(safe-area-inset-left,0px));bottom:auto;transform:none;background:rgba(0,0,0,.8);border:0;border-radius:4px;text-align:left;max-width:360px;animation:none;box-shadow:none;font-size:14.5px;padding:12px 15px;backdrop-filter:none;-webkit-backdrop-filter:none}
+#prompt{top:calc(16px + env(safe-area-inset-top,0px));left:50%;bottom:auto;transform:translateX(-50%);background:rgba(0,0,0,.8);border:0;border-radius:4px;text-align:left;max-width:360px;animation:none;box-shadow:none;font-size:14.5px;padding:12px 15px;backdrop-filter:none;-webkit-backdrop-filter:none}
 #help{left:auto;right:max(18px, env(safe-area-inset-right,0px));background:rgba(0,0,0,.55);border:0;border-radius:4px;box-shadow:none}
 #help .islock{display:none} #help.locked .islock{display:inline} #help.locked .nolock{display:none}
 #bottomBar{left:auto;right:max(18px, env(safe-area-inset-right,0px));transform:none;bottom:calc(56px + env(safe-area-inset-bottom,0px))}
@@ -464,7 +464,7 @@ const LOWQ = (("ontouchstart" in window) || navigator.maxTouchPoints>0) && Math.
 // every colour in this file is authored in sRGB: store it linear so lighting and tone mapping behave like a real camera
 { const C = THREE.Color.prototype, _h = C.setHex, _l = C.setHSL; C.setHex = function(h){ _h.call(this,h); return this.convertSRGBToLinear(); }; C.setHSL = function(a,b,c){ _l.call(this,a,b,c); return this.convertSRGBToLinear(); }; }
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true, powerPreference:"high-performance"});
-renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.22;
+renderer.outputEncoding = THREE.sRGBEncoding; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.5;
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, LOWQ ? 1.5 : 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = LOWQ ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;
@@ -710,7 +710,7 @@ function label(text, opt={}){
 
 /* ---- city blocks ---- */
 const BX = [[-172,-126],[-114,-46],[-34,34],[46,114],[126,172]];
-const SPECIAL = {"2,2":"office","1,3":"home","3,3":"market","3,1":"store","1,1":"gas","0,2":"temple","2,3":"park"};
+const SPECIAL = {"4,4":"substation","2,2":"office","1,3":"home","3,3":"market","3,1":"store","1,1":"gas","0,2":"temple","2,3":"park"};
 const hasRoad = v => ROADS.some(r=>Math.abs(r-v)<.1);
 for (let i=0;i<5;i++) for (let j=0;j<5;j++){
   const kind = SPECIAL[i+","+j], [x0,x1] = BX[i], [z0,z1] = BX[j];
@@ -750,6 +750,25 @@ const glassMat = new THREE.MeshLambertMaterial({color:0x3d5363, emissive:0xffc97
 const glassDark = mat(0x3d5363);
 buildMats.push(glassMat); darkMats.push(glassDark);
 function winAt(g, w, h, x, y, z, ry){ const base = g.userData.base || g.position; const f = box(w+.24,h+.24,.12,trimMat,x,y,z,g,false); f.rotation.y = ry; const gl = box(w,h,.16,glassMat,x,y,z,g,false); gl.rotation.y = ry; BLD.push({m:gl, x:base.x+x, z:base.z+z, lit:glassMat, dark:glassDark}); }
+function wire(a, b, parent=scene, r=.025, c=0x1a1a1a){
+  const dx=b[0]-a[0], dy=b[1]-a[1], dz=b[2]-a[2], L=Math.hypot(dx,dy,dz);
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r,r,L,5), mat(c)); m.position.set((a[0]+b[0])/2,(a[1]+b[1])/2,(a[2]+b[2])/2);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), new THREE.Vector3(dx/L,dy/L,dz/L)); parent.add(m); return m;
+}
+// ---- house electrics: meter post at the gate with a service drop from the street, AC compressor, water tank ----
+function houseElectrics(hg, w, d, two, L){
+  const front = d/2 + 4.2, H = two ? 6.2 : 3.2, mx = L.w/2 - .6;
+  cyl(.11,.11,5.2,0x8e959b,mx,2.6,front-.25,hg,8);
+  const mb = box(.42,.58,.22,0xc7ccd0,mx,1.55,front-.05,hg,false);
+  const dial = new THREE.Mesh(new THREE.PlaneGeometry(.26,.26), new THREE.MeshBasicMaterial({map:METER_TEX})); dial.position.set(mx,1.6,front+.065); hg.add(dial);
+  box(.12,.12,.2,0x333,mx,5.1,front-.15,hg,false);
+  wire([mx,5.1,front-.2],[w/2-.4,H-.3,d/2+.1],hg,.018);
+  wire([mx,5.1,front-.2],[mx+1.5,6.6,front+6.5],hg,.018);
+  box(.9,.65,.38,0xf0f0ec,-w/2-.35,.45,-d/4,hg); cyl(.24,.24,.04,0x777,-w/2-.55,.45,-d/4,hg,12).rotation.z = Math.PI/2;
+  const tk = cyl(.55,.55,1.4,0x2f6fb2,w/2-1,.75,-d/2-.5,hg,14); cyl(.57,.57,.08,0x1f4f86,w/2-1,1.48,-d/2-.5,hg,14);
+}
+var METER_TEX = canvasTex(64,64,(c,w,h)=>{ c.fillStyle="#e8ecef"; c.fillRect(0,0,w,h); c.fillStyle="#1f3d6b"; c.fillRect(0,0,w,12); c.fillStyle="#fff"; c.font="700 9px sans-serif"; c.fillText("MEA kWh",12,10); c.fillStyle="#0c0c0c"; c.fillRect(8,22,48,14); c.fillStyle="#9dff9d"; c.font="700 11px monospace"; c.fillText("04518",12,33); c.fillStyle="#d61f1f"; c.beginPath(); c.arc(32,50,4,0,7); c.fill(); });
+
 function house(x, z, w, d, opt={}){
   const g = new THREE.Group(); g.position.set(x,0,z); g.rotation.y = opt.face||0; scene.add(g);
   const sh = new THREE.Group(); g.add(sh); sh.userData.base = g.position; g.userData.shell = sh;
@@ -775,6 +794,7 @@ function house(x, z, w, d, opt={}){
   const gate = box(4.2,1.3,.08,0x5a5f63,0,.75,front,g,false); gate.material = mat(0x4a4f53);
   const drive = new THREE.Mesh(new THREE.PlaneGeometry(4,front-d/2), mat(0xb9b4aa)); drive.rotation.x = -Math.PI/2; drive.position.set(0,.06,(front+d/2)/2); g.add(drive);
   for (let k=0;k<2;k++){ const pot = cyl(.3,.22,.5,0x9c5a3c,-L.w/2+1+k*1.2,.25,front-1,g,8); const pl = new THREE.Mesh(sph(.45,8,6), mat(0x4f8a3a)); pl.position.set(-L.w/2+1+k*1.2,.85,front-1); g.add(pl); }
+  houseElectrics(g, w, d, two, L);
   if (!opt.hollow) solid(x,z,w,d); return g;
 }
 // soi through the estate
@@ -898,6 +918,112 @@ function house(x, z, w, d, opt={}){
 }
 
 
+/* ---- realistic vehicle models (side-profile extrusions, glass, wheels with rims, lights, Thai plates) ---- */
+const VCACHE = {};
+function profileGeo(key, pts, width, bevel=.06){
+  return VCACHE[key] || (VCACHE[key] = (()=>{ const s = new THREE.Shape(); pts.forEach(([z,y],i)=> i ? s.lineTo(z,y) : s.moveTo(z,y));
+    const g = new THREE.ExtrudeGeometry(s, {depth:width, bevelEnabled:bevel>0, bevelThickness:bevel, bevelSize:bevel, bevelSegments:2, steps:1, curveSegments:4});
+    g.translate(0,0,-width/2); g.rotateY(-Math.PI/2); return g; })());
+}
+const GLASS = new THREE.MeshLambertMaterial({color:0x1d2a36, emissive:0x0a1218});
+const CHROME = mat(0xc9ced3), TIRE = mat(0x161616), RUBBER = mat(0x2a2a2a);
+const PLATE_TEX = canvasTex(256,96,(g,w,h)=>{ g.fillStyle="#f7f7f2"; g.fillRect(0,0,w,h); g.strokeStyle="#222"; g.lineWidth=5; g.strokeRect(4,4,w-8,h-8); g.fillStyle="#111"; g.font='700 44px "IBM Plex Sans Thai",sans-serif'; g.textAlign="center"; g.fillText("3กข 4567",w/2,50); g.font='500 20px "IBM Plex Sans Thai",sans-serif'; g.fillText("สมุทรปราการ",w/2,80); });
+const PLATE = new THREE.MeshLambertMaterial({map:PLATE_TEX});
+function wheel(g, x, y, z, r=.33, w=.22, dual=false){
+  const t = cyl(r, r, w, 0x161616, x, y, z, g, 18); t.rotation.z = Math.PI/2; t.material = TIRE;
+  const rim = cyl(r*.58, r*.58, w+.02, 0xc9ced3, x + Math.sign(x)*.005, y, z, g, 12); rim.rotation.z = Math.PI/2; rim.material = CHROME;
+  const hub = cyl(r*.2, r*.2, w+.05, 0x555, x + Math.sign(x)*.01, y, z, g, 8); hub.rotation.z = Math.PI/2;
+  if (dual){ const t2 = cyl(r, r, w, 0x161616, x - Math.sign(x)*(w+.04), y, z, g, 18); t2.rotation.z = Math.PI/2; t2.material = TIRE; }
+}
+function lightsAndPlates(g, zf, zr, yH, yT, halfW){
+  [-1,1].forEach(s=>{
+    box(.36,.14,.05,0xf3f1e6,s*(halfW-.28),yH,zf,g,false);
+    box(.32,.16,.05,0xc0161b,s*(halfW-.26),yT,zr,g,false);
+  });
+  const pf = new THREE.Mesh(new THREE.PlaneGeometry(.52,.2), PLATE); pf.position.set(0,yH-.22,zf+.03); g.add(pf);
+  const pr = new THREE.Mesh(new THREE.PlaneGeometry(.52,.2), PLATE); pr.position.set(0,yT-.18,zr-.03); pr.rotation.y = Math.PI; g.add(pr);
+}
+const CAR_COLORS = [0xf2f2f0,0xf2f2f0,0xb9bec4,0x1d1f22,0x6e7378,0x1e3a63,0x8e1c1c,0xc9b48c,0x2f4a3a];
+function makeCar(type, color){
+  const g = new THREE.Group(), body = new THREE.MeshLambertMaterial({color});
+  if (type==="sedan" || type==="taxi"){
+    const m = new THREE.Mesh(profileGeo("sedan",[[-2.25,.35],[2.2,.35],[2.27,.55],[2.2,.82],[1.05,.96],[.5,1.42],[-.78,1.45],[-1.62,1.03],[-2.25,.96],[-2.32,.6]],1.68), body); m.castShadow = true; g.add(m);
+    const gl = new THREE.Mesh(profileGeo("sedanG",[[1.0,.98],[.52,1.38],[-.74,1.41],[-1.52,1.04]],1.7,.07), GLASS); g.add(gl);
+    box(1.86,.38,.12,color,0,1.2,-.12,g,false).material = body;
+    lightsAndPlates(g, 2.27, -2.33, .75, .86, .9);
+    box(1.2,.18,.04,0x111111,0,.62,2.28,g,false);
+    [-1,1].forEach(s=>box(.12,.1,.2,color,s*.98,1.02,.92,g,false));
+    [[-.86,1.38],[.86,1.38],[-.86,-1.42],[.86,-1.42]].forEach(([x,z])=>wheel(g,x,.33,z));
+    if (type==="taxi"){ box(1.84,.04,2.2,0xf2d024,0,1.0,-.1,g,false); const sg = box(.8,.22,.3,0xf2d024,0,1.6,-.15,g,false);
+      const tt = new THREE.Mesh(new THREE.PlaneGeometry(.76,.18), new THREE.MeshBasicMaterial({map:canvasTex(128,32,(c,w,h)=>{c.fillStyle="#f2d024";c.fillRect(0,0,w,h);c.fillStyle="#111";c.font="700 20px sans-serif";c.textAlign="center";c.fillText("TAXI-METER",w/2,23);})})); tt.position.set(0,1.6,.01); g.add(tt); }
+  } else if (type==="pickup"){
+    const m = new THREE.Mesh(profileGeo("pickup",[[-2.6,.48],[2.5,.48],[2.57,.72],[2.47,.98],[1.38,1.1],[.82,1.72],[-.34,1.74],[-.46,1.12],[-2.6,1.12]],1.72), body); m.castShadow = true; g.add(m);
+    const gl = new THREE.Mesh(profileGeo("pickupG",[[1.28,1.13],[.86,1.64],[-.28,1.66],[-.38,1.16]],1.74,.07), GLASS); g.add(gl);
+    box(1.6,.04,1.95,0x2b2b2b,0,1.17,-1.55,g,false);
+    box(1.9,.18,.18,0x3a3a3a,0,.55,-2.68,g,false); box(1.9,.2,.2,0x3a3a3a,0,.6,2.6,g,false);
+    lightsAndPlates(g, 2.58, -2.62, .82, .98, .92);
+    box(1.0,.25,.04,0x222,0,.8,2.58,g,false);
+    [-1,1].forEach(s=>box(.12,.1,.2,color,s*1.0,1.2,1.1,g,false));
+    [[-.88,1.6],[.88,1.6],[-.88,-1.65],[.88,-1.65]].forEach(([x,z])=>wheel(g,x,.38,z,.38,.25));
+  } else {
+    const m = new THREE.Mesh(profileGeo("van",[[-2.6,.42],[2.45,.42],[2.6,.72],[2.42,1.12],[1.85,1.75],[1.25,2.16],[-2.6,2.16]],1.78), body); m.castShadow = true; g.add(m);
+    const gl = new THREE.Mesh(profileGeo("vanG",[[2.08,1.22],[1.28,2.0],[-2.42,2.0],[-2.42,1.32]],1.8,.07), GLASS); g.add(gl);
+    lightsAndPlates(g, 2.61, -2.64, .8, 1.0, .95);
+    [[-.9,1.65],[.9,1.65],[-.9,-1.75],[.9,-1.75]].forEach(([x,z])=>wheel(g,x,.36,z,.36,.24));
+  }
+  return g;
+}
+function makeMoto(color){
+  const g = new THREE.Group(), c = mat(color);
+  [.62,-.62].forEach(z=>wheel(g,0,.3,z,.3,.1));
+  const fork = box(.06,.75,.06,0x999999,0,.68,.54,g,false); fork.rotation.x = -.32;
+  box(.62,.14,.24,color,0,1.06,.44,g).material = c; box(.2,.12,.06,0xf3f1e6,0,1.06,.57,g,false);
+  [-1,1].forEach(s=>{ box(.12,.04,.04,0x222,s*.36,1.07,.42,g,false); const mr = box(.02,.25,.02,0x333,s*.25,1.22,.4,g,false); mr.rotation.z = s*.3; box(.08,.05,.02,0x333,s*.3,1.35,.4,g,false); });
+  const ls = box(.5,.58,.08,color,0,.72,.38,g); ls.rotation.x = .28; ls.material = c;
+  box(.3,.06,.5,0x2a2a2a,0,.42,.05,g,false);
+  box(.34,.34,.82,color,0,.74,-.42,g).material = c;
+  box(.3,.12,.78,0x111111,0,.97,-.36,g);
+  box(.16,.08,.06,0xc0161b,0,.86,-.85,g,false);
+  const ex = cyl(.05,.06,.6,0xbfc4c8,.18,.36,-.42,g,8); ex.rotation.x = Math.PI/2;
+  const pl = new THREE.Mesh(new THREE.PlaneGeometry(.26,.12), PLATE); pl.position.set(0,.7,-.88); pl.rotation.y = Math.PI; g.add(pl);
+  return g;
+}
+// MEA bucket truck: cab-over cab, utility body with lockers, insulated boom, fibreglass bucket, beacon bar, dual rear wheels
+function makeBucketTruck(withBoom=true){
+  const t = new THREE.Group(), white = new THREE.MeshLambertMaterial({color:0xf5f5f2}), orange = mat(0xff7a12);
+  const cab = new THREE.Mesh(profileGeo("tcab",[[1.95,.78],[3.58,.78],[3.66,1.25],[3.56,2.5],[3.25,2.74],[1.95,2.74]],2.06,.07), white); cab.castShadow = true; t.add(cab);
+  const ws = new THREE.Mesh(profileGeo("tcabG",[[3.42,1.78],[3.56,2.42],[3.27,2.62],[2.55,2.62],[2.55,1.78]],2.1,.03), GLASS); t.add(ws);
+  [-1,1].forEach(s=>{ box(.03,.24,1.66,0xff7a12,s*1.115,1.5,2.78,t,false); box(.03,.1,1.66,0x1f3d6b,s*1.115,1.33,2.78,t,false); });
+  box(2.1,.24,.03,0xff7a12,0,1.5,3.68,t,false);
+  const door = new THREE.Mesh(new THREE.PlaneGeometry(1.1,.42), new THREE.MeshLambertMaterial({map:canvasTex(256,96,(c,w,h)=>{ c.fillStyle="#f5f5f2"; c.fillRect(0,0,w,h); c.fillStyle="#ff7a12"; c.font='800 40px "IBM Plex Sans Thai",sans-serif'; c.textAlign="center"; c.fillText("กฟน.",w/2,42); c.fillStyle="#1f3d6b"; c.font='600 22px "IBM Plex Sans Thai",sans-serif'; c.fillText("การไฟฟ้านครหลวง",w/2,78); })}));
+  [-1,1].forEach(s=>{ const d = door.clone(); d.position.set(s*1.125,1.95,2.6); d.rotation.y = s*Math.PI/2; t.add(d); });
+  box(1.5,.38,.04,0x1b1d20,0,1.05,3.69,t,false); [-1,1].forEach(s=>box(.36,.2,.05,0xf3f1e6,s*.8,1.12,3.69,t,false));
+  box(2.3,.26,.28,0x8a8f94,0,.66,3.72,t,false);
+  [-1,1].forEach(s=>{ box(.04,.04,.4,0x222,s*1.18,2.25,3.35,t,false); box(.06,.4,.22,0x222,s*1.38,2.15,3.35,t,false); });
+  box(1.5,.14,.3,0xffb300,0,2.83,2.9,t,false).material = new THREE.MeshBasicMaterial({color:0xffb300});
+  box(.95,.26,7.0,0x2a2d31,0,.72,-.2,t,false);
+  const ub = new THREE.Mesh(new THREE.BoxGeometry(2.3,1.15,3.7), white); ub.position.set(0,1.45,-1.45); ub.castShadow = true; t.add(ub);
+  [-1,1].forEach(s=>{ for (let k=0;k<3;k++){ box(.02,.95,1.08,0xdfe2e4,s*1.16,1.47,-2.65+k*1.2,t,false); box(.03,.06,.2,0x555,s*1.17,1.5,-2.3+k*1.2,t,false); }
+    box(.03,.2,3.7,0xff7a12,s*1.16,1.98,-1.45,t,false); });
+  box(2.32,.08,3.72,0x9aa0a6,0,2.06,-1.45,t,false);
+  [[-1.25,-3.05],[1.25,-3.05],[-1.25,.25],[1.25,.25]].forEach(([x,z])=>{ box(.22,.5,.22,0xffb300,x,.85,z,t,false); box(.4,.06,.4,0x333,x,.58,z,t,false); });
+  [[-1,2.65,false],[1,2.65,false],[-1,-2.15,true],[1,-2.15,true]].forEach(([x,z,d])=>wheel(t,x*1.0,.5,z,.5,.32,d));
+  [-1,1].forEach(s=>box(.5,.4,.03,0x111,s*.95,.55,-2.75,t,false));
+  [-1,1].forEach(s=>{ const cone = new THREE.Mesh(new THREE.ConeGeometry(.16,.5,10), mat(0xff6a00)); cone.position.set(s*.85,2.35,-3.0); t.add(cone); box(.32,.04,.32,0x222,s*.85,2.11,-3.0,t,false); });
+  cyl(.5,.55,.55,0x8a8f94,0,2.37,-1.6,t,14);
+  const pivot = new THREE.Group(); pivot.position.set(0,2.85,-1.6); t.add(pivot);
+  if (withBoom){
+    box(.6,.5,.7,0xf5f5f2,0,0,0,pivot);
+    box(.4,.4,5.0,0xf5f5f2,0,.05,2.5,pivot); box(.42,.08,5.0,0xff7a12,0,.2,2.5,pivot,false);
+    box(.32,.32,1.2,0xffc928,0,.05,5.5,pivot);
+  }
+  const bucket = new THREE.Group(); bucket.position.set(0,0,6); pivot.add(bucket);
+  if (withBoom){ box(.92,1.0,.92,0xffd23f,0,.25,0,bucket); box(.98,.08,.98,0xe0a800,0,.78,0,bucket,false); box(.8,.04,.8,0x333,0,.76,0,bucket,false); }
+  pivot.rotation.x = -.08;
+  t.userData.pivot = pivot; t.userData.bucket = bucket;
+  return t;
+}
+
 // office: การไฟฟ้านครหลวง เขตสมุทรปราการ
 const OFF = {x:0,z:-4};
 {
@@ -919,6 +1045,117 @@ const OFF = {x:0,z:-4};
   [[30,28],[38,28]].forEach(([x,z])=>cyl(.15,.15,4.5,0x777,x,2.25,z));
   [["อู่ซ่อมบำรุงรถ",34,24]].forEach(([t,x,z])=>{ const s=label(t,{size:34}); s.position.set(x,4.3,z); scene.add(s); });
 }
+// ---- MEA realism: office forecourt (flag, guard booth, fence, fleet, service sign) ----
+function dangerSign(parent, x, y, z, ry=0, txt="อันตราย ไฟฟ้าแรงสูง"){
+  const p = new THREE.Mesh(new THREE.PlaneGeometry(1.1,.75), new THREE.MeshLambertMaterial({map:canvasTex(220,150,(c,w,h)=>{ c.fillStyle="#fff"; c.fillRect(0,0,w,h); c.fillStyle="#d61f1f"; c.fillRect(0,0,w,44);
+    c.fillStyle="#fff"; c.font='800 30px "IBM Plex Sans Thai",sans-serif'; c.textAlign="center"; c.fillText("อันตราย",w/2,33); c.fillStyle="#111"; c.beginPath(); c.moveTo(110,56); c.lineTo(92,98); c.lineTo(108,98); c.lineTo(98,136); c.lineTo(128,88); c.lineTo(112,88); c.lineTo(124,56); c.fill();
+    c.font='600 17px "IBM Plex Sans Thai",sans-serif'; c.fillText(txt.replace("อันตราย ",""),w/2,146); }), side:THREE.DoubleSide}));
+  p.position.set(x,y,z); p.rotation.y = ry; parent.add(p); return p;
+}
+{
+  const FX = OFF.x, FZ0 = OFF.z;
+  // Thai flag on a tall pole by the entrance
+  const fp = new THREE.Group(); fp.position.set(-16,0,12); scene.add(fp);
+  cyl(.9,1.1,.5,0xd8d2c6,0,.25,0,fp,10); cyl(.07,.1,11,0xe6e8ea,0,5.75,0,fp,8); cyl(.14,.14,.18,0xd4a017,0,11.3,0,fp,8);
+  const flag = new THREE.Mesh(new THREE.PlaneGeometry(2.7,1.8,8,1), new THREE.MeshLambertMaterial({side:THREE.DoubleSide, map:canvasTex(180,120,(c,w,h)=>{ [["#a51931",0,20],["#f4f5f8",20,20],["#2d2a4a",40,40],["#f4f5f8",80,20],["#a51931",100,20]].forEach(([col,y,hh])=>{ c.fillStyle=col; c.fillRect(0,y,w,hh); }); })}));
+  flag.position.set(1.4,10.2,0); fp.add(flag); solid(-16,12,1.8,1.8);
+  const fpos = flag.geometry.attributes.position, base = Float32Array.from(fpos.array);
+  (window.__flagTick = t => { for (let i=0;i<fpos.count;i++){ const x = base[i*3]; fpos.setZ(i, Math.sin(t*3 + x*2.2) * .12 * (x+1.35)); } fpos.needsUpdate = true; })(0);
+  // perimeter fence along the main road with an entrance gate + guard booth + boom barrier
+  const fm = mat(0x9aa3aa);
+  [[-33,-12]].forEach(([a,b])=>{ for (let x=a; x<=b; x+=2.5) cyl(.06,.06,1.8,0x6f777d,x,.9,33.6,scene,6); box(b-a,.06,.06,fm,(a+b)/2,1.7,33.6,scene,false); box(b-a,.06,.06,fm,(a+b)/2,.9,33.6,scene,false); box(b-a,.4,.25,0xd8d2c6,(a+b)/2,.2,33.6); });
+  const gb = new THREE.Group(); gb.position.set(-10.5,0,30.8); scene.add(gb);
+  box(2.4,2.6,2.4,0xf2f0ea,0,1.3,0,gb); box(2.9,.25,2.9,0xff7a12,0,2.75,0,gb); box(2.0,1.0,.05,0x9fc6dc,0,1.7,1.22,gb,false); box(.05,1.0,1.6,0x9fc6dc,1.22,1.7,0,gb,false);
+  solid(-10.5,30.8,2.4,2.4);
+  const bar = new THREE.Group(); bar.position.set(-8.8,1.0,31.8); scene.add(bar); box(.35,1.0,.35,0x333a40,0,-.5,0,bar);
+  const arm = new THREE.Group(); bar.add(arm); for (let k=0;k<7;k++) box(.9,.1,.1,k%2?0xd61f1f:0xf4f4f4,.6+k*.9,.1,0,arm,false);
+  window.__barrier = arm;
+  const gs = new THREE.Mesh(new THREE.PlaneGeometry(2.2,.4), new THREE.MeshBasicMaterial({map:canvasTex(220,40,(c,w,h)=>{ c.fillStyle="#1f3d6b"; c.fillRect(0,0,w,h); c.fillStyle="#fff"; c.font='700 24px "IBM Plex Sans Thai",sans-serif'; c.textAlign="center"; c.fillText("ป้อมรักษาการณ์",w/2,29); })}));
+  gs.position.set(0,2.75,1.47); gb.add(gs);
+  // customer-service pylon
+  const py = new THREE.Group(); py.position.set(-24,0,24); scene.add(py); solid(-24,24,2.8,.8);
+  box(2.6,4.6,.5,0xf4f4f2,0,2.3,0,py); box(2.62,.5,.52,0xff7a12,0,4.35,0,py,false);
+  const pyT = canvasTex(260,420,(c,w,h)=>{ c.fillStyle="#f4f4f2"; c.fillRect(0,0,w,h); c.fillStyle="#ff7a12"; c.font='800 64px "IBM Plex Sans Thai",sans-serif'; c.textAlign="center"; c.fillText("กฟน.",w/2,90); c.fillStyle="#1f3d6b"; c.font='700 26px "IBM Plex Sans Thai",sans-serif';
+    ["การไฟฟ้านครหลวง","เขตสมุทรปราการ","","ศูนย์บริการลูกค้า","ชำระค่าไฟฟ้า","ขอติดตั้งมิเตอร์","แจ้งไฟฟ้าขัดข้อง","โทร 1130"].forEach((t,i)=>{ if (i===7){ c.fillStyle="#d61f1f"; c.font='800 34px "IBM Plex Sans Thai",sans-serif'; } c.fillText(t,w/2,140+i*36); }); });
+  [0,Math.PI].forEach(ry=>{ const p = new THREE.Mesh(new THREE.PlaneGeometry(2.4,3.9), new THREE.MeshLambertMaterial({map:pyT})); p.position.set(0,2.05,ry?-.26:.26); p.rotation.y = ry; py.add(p); });
+  // parked fleet in the yard (the player's own truck parks at x=26)
+  [[5,"truck"],[11,"truck"],[-1,"pickup"],[17,"pickup"]].forEach(([x,k])=>{
+    let v; if (k==="truck") v = makeBucketTruck(true); else { v = makeCar("pickup",0xf5f5f2); [-1,1].forEach(s=>box(.02,.14,3.6,0xff7a12,s*.93,.9,-.1,v,false)); }
+    v.position.set(x,0,25); v.rotation.y = Math.PI; scene.add(v); solid(x,25,k==="truck"?2.4:2,k==="truck"?7.4:5.2);
+  });
+  // MEA text on the building roof parapet, facing the road
+  const rf = new THREE.Mesh(new THREE.PlaneGeometry(9,1.6), new THREE.MeshBasicMaterial({map:canvasTex(400,72,(c,w,h)=>{ c.fillStyle="#ff7a12"; c.fillRect(0,0,w,h); c.fillStyle="#fff"; c.font='800 58px "IBM Plex Sans Thai",sans-serif'; c.textAlign="center"; c.textBaseline="middle"; c.fillText("กฟน.  MEA",w/2,h/2+3); })}));
+  rf.position.set(FX+12,11.4,FZ0+11.32); scene.add(rf);
+}
+
+// ---- 115/24 kV substation "สถานีย่อยบางพลี" (block 4,4) with incoming transmission line ----
+const SUB = {x:149, z:150};
+{
+  const g = new THREE.Group(); g.position.set(SUB.x,0,SUB.z); scene.add(g);
+  const W = 38, D = 32, steel = mat(0x9ea6ad), galv = 0x9ea6ad;
+  const gravel = new THREE.Mesh(uvS(new THREE.PlaneGeometry(W,D),W/3,D/3), GM.stone); gravel.rotation.x = -Math.PI/2; gravel.position.y = .06; g.add(gravel);
+  // chain-link fence with barbed top + danger signs
+  const mesh = new THREE.MeshLambertMaterial({transparent:true, alphaTest:.4, side:THREE.DoubleSide, map:(()=>{ const t = canvasTex(64,64,(c,w,h)=>{ c.clearRect(0,0,w,h); c.strokeStyle="#b8c0c6"; c.lineWidth=3; c.beginPath(); c.moveTo(0,0); c.lineTo(w,h); c.moveTo(w,0); c.lineTo(0,h); c.stroke(); }); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; })()});
+  [[0,-D/2,W,0],[0,D/2,W,0],[-W/2,0,D,Math.PI/2],[W/2,0,D,Math.PI/2]].forEach(([x,z,len,ry])=>{
+    const geo = uvS(new THREE.PlaneGeometry(len,2.6), len/.9, 2.6/.9), f = new THREE.Mesh(geo, mesh); f.position.set(x,1.3,z); f.rotation.y = ry; g.add(f);
+    for (let k=-len/2; k<=len/2+.01; k+=3){ const px = ry ? x : x+k, pz = ry ? z+k : z; cyl(.05,.05,3,galv,px,1.5,pz,g,6); }
+    for (let k=0;k<3;k++){ const t = box(ry?.03:len,.02,ry?len:.03,0x666,x,2.75+k*.12,z,g,false); }
+    [-len/4, len/4].forEach(k=>dangerSign(g, ry ? x + (x>0?.08:-.08) : x+k, 1.6, ry ? z+k : z + (z>0?.08:-.08), ry ? (x>0?Math.PI/2:-Math.PI/2) : (z>0?0:Math.PI)));
+  });
+  solid(SUB.x,SUB.z,W,D);
+  // gate + nameplate on the road side (−x faces road x=120)
+  const np = new THREE.Mesh(new THREE.PlaneGeometry(6,1.2), new THREE.MeshLambertMaterial({map:canvasTex(480,96,(c,w,h)=>{ c.fillStyle="#1f3d6b"; c.fillRect(0,0,w,h); c.fillStyle="#ff7a12"; c.fillRect(0,h-10,w,10); c.fillStyle="#fff"; c.font='700 34px "IBM Plex Sans Thai",sans-serif'; c.textAlign="center"; c.fillText("สถานีย่อยบางพลี กฟน.",w/2,42); c.font='500 24px "IBM Plex Sans Thai",sans-serif'; c.fillText("115/24 kV · 2 × 50 MVA",w/2,76); })}));
+  np.position.set(-W/2-.12,3.4,0); np.rotation.y = -Math.PI/2; g.add(np); [-3,3].forEach(z=>box(.3,3.6,.3,0xd8d2c6,-W/2-.1,1.8,z,g));
+  // control building
+  const cb = new THREE.Group(); cb.position.set(-11,0,-10); g.add(cb);
+  box(12,4,7,0xeceae4,0,2,0,cb); box(12.6,.5,7.6,0xff7a12,0,4.2,0,cb,false);
+  for (let k=-2;k<=2;k++) box(1.2,1,.05,0x9fc6dc,k*2.2,2.6,3.53,cb,false); box(1.4,2.4,.05,0x5a6168,4.8,1.2,3.53,cb,false);
+  const ct = label("อาคารควบคุม",{size:24,scale:.6}); ct.position.set(0,5.4,0); cb.add(ct);
+  // two power transformers 115/24 kV
+  const PT = (x, z) => {
+    const t = new THREE.Group(); t.position.set(x,0,z); g.add(t);
+    box(5.5,.5,4,0xbfbab0,0,.25,0,t);
+    box(4.2,3.6,2.6,0x7f8c8d,0,2.3,0,t);
+    for (let k=0;k<10;k++){ box(.08,2.8,.9,0x6f7b7c,-1.9+k*.42,2.2,1.8,t,false); box(.08,2.8,.9,0x6f7b7c,-1.9+k*.42,2.2,-1.8,t,false); }
+    cyl(.55,.55,2.2,0x7f8c8d,1.4,4.6,0,t,12).rotation.z = Math.PI/2;           // conservator
+    [-1.1,0,1.1].forEach(bx=>{ cyl(.13,.2,1.9,0x6b4a2a,bx,5.05,-.6,t,8); for (let r=0;r<6;r++) cyl(.24,.24,.06,0x5a3d22,bx,4.3+r*.28,-.6,t,8); });   // 115 kV bushings
+    [-.8,0,.8].forEach(bx=>cyl(.09,.13,1.0,0x6b4a2a,bx,4.6,.8,t,8));                                                                         // 24 kV bushings
+    box(.6,.8,.3,0x5d6970,-2.2,1.6,1.4,t,false);
+    dangerSign(t, 0, 1.6, 1.33, 0, "อันตราย ไฟฟ้าแรงสูง 115 kV");
+    return t;
+  };
+  PT(-4,5); PT(7,5);
+  // 115 kV steel gantries (H-frames) + busbars + breakers + disconnectors
+  const gantry = (x, z, w, h) => { [-w/2, w/2].forEach(dx=>{ box(.35,h,.35,galv,x+dx,h/2,z,g); for (let y=1.2;y<h;y+=1.4){ const b = box(.05,1.5,.05,galv,x+dx,y,z+.17,g,false); b.rotation.z = .6; } }); box(w+.4,.45,.45,galv,x,h,z,g); };
+  gantry(1.5,-6,16,9); gantry(1.5,12,16,9);
+  [-4.5,1.5,7.5].forEach(px=>{
+    for (let r=0;r<5;r++) cyl(.18,.18,.08,0x6b4a2a,px,8.0-r*.18,-6,g,8);
+    wire([px,7.7,-6],[px,7.7,12],g,.05,0xb0b6bb);                                  // strung bus
+    wire([px,7.7,4],[px<0?-4:px>4?7:1.5,5.6,4.4],g,.035,0xb0b6bb);                 // drop to transformer bushings
+    box(.5,2.4,.5,0x8f9aa0,px,1.6,-2,g); cyl(.12,.18,1.3,0x6b4a2a,px,3.4,-2,g,8);  // dead-tank breaker
+    box(.15,1.2,.15,galv,px,.6,9,g); box(.12,.12,1.6,0x9ea6ad,px,1.6,9,g,false);
+  });
+  // outgoing 24 kV cable risers to feeder poles
+  [-14,-10].forEach(x=>{ cyl(.12,.12,7,0x666b70,x,3.5,15.2,g,8); box(1.6,.12,.12,0x333,x,6.6,15.2,g,false); });
+  // incoming 115 kV line: lattice towers walking in from the south
+  const tower = (x, z, h) => {
+    const t = new THREE.Group(); t.position.set(x,0,z); scene.add(t); const b = 2.2, tp = .7, k = Math.atan((b-tp)/h), L = Math.hypot(h, b-tp);
+    [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([sx,sz])=>{ const leg = box(.16,L,.16,galv,sx*(b+tp)/2,h/2,sz*(b+tp)/2,t,true); leg.rotation.set(sz*k, 0, -sx*k); });
+    for (let y=2; y<h-1; y+=2.4){ const ww = b - (b-tp)*(y/h);
+      [1,-1].forEach(sz=>[.55,-.55].forEach(r=>{ const d = box(ww*2.3,.07,.07,galv,0,y,sz*ww,t,false); d.rotation.z = r; }));
+      [1,-1].forEach(sx=>[.55,-.55].forEach(r=>{ const d = box(.07,.07,ww*2.3,galv,sx*ww,y,0,t,false); d.rotation.x = r; })); }
+    [[h-4.5,9],[h-2.2,7]].forEach(([y,w])=>{ box(w,.25,.25,galv,0,y,0,t); [-1,1].forEach(s=>{ for (let r=0;r<6;r++) cyl(.17,.17,.06,0x7a8590,s*(w/2-.3),y-.3-r*.16,0,t,8); }); });
+    cyl(.05,.05,1.6,galv,0,h+.8,0,t,6); return t;
+  };
+  const TX1 = SUB.x+1.5, TZ1 = 194, TZ2 = 250, TH = 26;
+  tower(TX1, TZ1, TH); tower(TX1, TZ2, TH);
+  [[-4.2,TH-5.4,-4.5],[4.2,TH-5.4,7.5],[-3.2,TH-3.1,1.5],[3.2,TH-3.1,1.5]].forEach(([dx,y,gx])=>{
+    wire([TX1+dx, y, TZ2], [TX1+dx, y, TZ1], scene, .045, 0x2f3438);
+    wire([TX1+dx, y, TZ1], [SUB.x+gx, 8.0, SUB.z+12], scene, .045, 0x2f3438); });
+  const sl = label("สถานีย่อยบางพลี 115/24 kV",{color:"#ffb36b"}); sl.position.set(SUB.x,12,SUB.z); scene.add(sl);
+}
+
+
 // market (food)
 const MKT = {x:80,z:82};
 {
@@ -943,27 +1180,54 @@ const STO = {x:80,z:-84};
   building(STO.x-20,STO.z-14,12,14,14,4); building(STO.x+20,STO.z-16,13,12,18,6); building(STO.x+22,STO.z+16,12,12,10,1);
 }
 
-// gas station
+// gas station (fictional brand "สยามพลังงาน"): canopy with lit underside, pump islands with dispensers, price pylon, mini-mart
 const GAS = {x:-80,z:-80};
 {
   const g = new THREE.Group(); g.position.set(GAS.x,0,GAS.z); scene.add(g);
-  const pad = new THREE.Mesh(new THREE.PlaneGeometry(30,22), mat(0x8b9094)); pad.rotation.x=-Math.PI/2; pad.position.y=.07; g.add(pad);
-  box(22,.6,12,0xf4f4f0,0,6.3,0,g); box(22.2,.8,12.2,0x1f6fbf,0,6.9,0,g);
-  [[-9,-4],[9,-4],[-9,4],[9,4]].forEach(([x,z])=>cyl(.25,.25,6,0xdddddd,x,3,z,g));
-  [-4,4].forEach(x=>{ box(1,1.8,.8,0x1f6fbf,x,.9,0,g); box(.7,.5,.05,0x9fe3ff,x,1.4,.42,g,false); });
-  box(10,4,7,0xeeeeee,0,2,-13,g); box(10.2,.6,7.2,0x1f6fbf,0,4.2,-13,g);
+  const pad = new THREE.Mesh(uvS(new THREE.PlaneGeometry(30,22),5,4), GM.concrete); pad.rotation.x = -Math.PI/2; pad.position.y = .07; g.add(pad);
+  const blue = 0x0f4c81, lime = 0x8dc63f;
+  box(22.4,1.0,12.4,0xffffff,0,6.6,0,g); box(22.5,.36,12.5,blue,0,6.95,0,g,false); box(22.52,.12,12.52,lime,0,6.4,0,g,false);
+  const under = new THREE.MeshBasicMaterial({color:0xf4f6f8});
+  [-6,0,6].forEach(x=>[-2.6,2.6].forEach(z=>{ const p = new THREE.Mesh(new THREE.PlaneGeometry(3.2,.7), under); p.rotation.x = Math.PI/2; p.position.set(x,6.08,z); g.add(p); }));
+  const brand = canvasTex(512,96,(c,w,h)=>{ c.fillStyle="#0f4c81"; c.fillRect(0,0,w,h); c.fillStyle="#8dc63f"; c.beginPath(); c.arc(56,48,30,0,7); c.fill(); c.fillStyle="#fff"; c.font='800 46px "IBM Plex Sans Thai",sans-serif'; c.textBaseline="middle"; c.fillText("สยามพลังงาน",104,50); });
+  [[0,6.6,6.22,0],[0,6.6,-6.22,Math.PI],[11.22,6.6,0,Math.PI/2],[-11.22,6.6,0,-Math.PI/2]].forEach(([x,y,z,ry],i)=>{ const p = new THREE.Mesh(new THREE.PlaneGeometry(i<2?7:5,.9), new THREE.MeshLambertMaterial({map:brand})); p.position.set(x,y,z); p.rotation.y = ry; g.add(p); });
+  [[-9,-4],[9,-4],[-9,4],[9,4]].forEach(([x,z])=>{ box(.6,6.1,.6,blue,x,3.05,z,g); box(.64,.5,.64,lime,x,.25,z,g,false); });
+  const scr = canvasTex(128,64,(c,w,h)=>{ c.fillStyle="#0b1a10"; c.fillRect(0,0,w,h); c.fillStyle="#7dff8a"; c.font="700 22px monospace"; c.fillText("฿ 500.00",8,26); c.fillText("13.02 L",8,54); });
+  [-4,4].forEach(x=>{
+    box(1.5,.25,5.4,0xb9bdc0,x,.12,0,g); box(1.54,.06,5.44,0xf2c200,x,.27,0,g,false); solid(GAS.x+x,GAS.z,1.6,5.4);
+    [-1.3,1.3].forEach(z=>{
+      box(1.0,1.95,.62,0xf7f7f5,x,1.25,z,g); box(1.02,.3,.64,blue,x,2.35,z,g,false); box(1.02,.12,.64,lime,x,2.15,z,g,false);
+      [-1,1].forEach(s=>{ const sp = new THREE.Mesh(new THREE.PlaneGeometry(.6,.3), new THREE.MeshBasicMaterial({map:scr})); sp.position.set(x+s*.511,1.7,z); sp.rotation.y = s*Math.PI/2; g.add(sp);
+        [0xe63b2e,0x2f8a63,0x1f6fbf].forEach((cc,k)=>{ box(.06,.18,.1,cc,x+s*.52,1.15,z-.2+k*.2,g,false); }); });
+    });
+  });
+  const pylon = new THREE.Group(); pylon.position.set(13,0,9.5); g.add(pylon);
+  box(.5,7.5,.5,0x8a9196,0,3.75,0,pylon); box(2.6,3.6,.4,blue,0,6.0,0,pylon);
+  const pt = canvasTex(256,360,(c,w,h)=>{ c.fillStyle="#0f4c81"; c.fillRect(0,0,w,h); c.fillStyle="#8dc63f"; c.fillRect(0,0,w,70); c.fillStyle="#0f4c81"; c.font='800 30px "IBM Plex Sans Thai",sans-serif'; c.textAlign="center"; c.fillText("สยามพลังงาน",w/2,46);
+    [["แก๊สโซฮอล์ 95","38.45"],["แก๊สโซฮอล์ 91","37.98"],["E20","36.15"],["ดีเซล B7","32.94"]].forEach(([n,p],i)=>{ const y = 110+i*64; c.fillStyle="#fff"; c.textAlign="left"; c.font='600 22px "IBM Plex Sans Thai",sans-serif'; c.fillText(n,14,y); c.fillStyle="#111"; c.fillRect(150,y-26,96,38); c.fillStyle="#ffcf3a"; c.font="700 28px monospace"; c.textAlign="right"; c.fillText(p,242,y+2); }); });
+  [0,Math.PI].forEach(ry=>{ const p = new THREE.Mesh(new THREE.PlaneGeometry(2.4,3.4), new THREE.MeshBasicMaterial({map:pt})); p.position.set(0,6.0,ry?-.21:.21); p.rotation.y = ry; pylon.add(p); });
+  // mini-mart with glass front
+  const shop = new THREE.Group(); shop.position.set(0,0,-13); g.add(shop);
+  box(10,4,7,0xf7f7f5,0,2,0,shop); box(10.2,.7,7.2,blue,0,4.15,0,shop,false); box(10.22,.16,7.22,lime,0,3.75,0,shop,false);
+  const front = new THREE.Mesh(new THREE.PlaneGeometry(8.6,2.9), new THREE.MeshLambertMaterial({color:0x9fc6dc, emissive:0x223344})); front.position.set(0,1.55,3.52); shop.add(front);
+  [-4.3,-1.6,1.6,4.3].forEach(x=>box(.12,2.9,.08,0x8a9196,x,1.55,3.54,shop,false)); box(1.4,2.3,.05,0x444b52,0,1.15,3.56,shop,false);
+  const ms = new THREE.Mesh(new THREE.PlaneGeometry(5,.6), new THREE.MeshBasicMaterial({map:canvasTex(320,40,(c,w,h)=>{ c.fillStyle="#8dc63f"; c.fillRect(0,0,w,h); c.fillStyle="#0f4c81"; c.font='800 28px "IBM Plex Sans Thai",sans-serif'; c.textAlign="center"; c.fillText("SIAM MART 24 ชม.",w/2,30); })}));
+  ms.position.set(0,3.4,3.53); shop.add(ms);
   solid(GAS.x,GAS.z-13,10,7);
+  box(.8,1.2,.5,0xe63b2e,9,.6,-9.5,g); box(.6,.3,.05,0xffffff,9,1,-9.24,g,false);
+  const parked = makeCar("pickup", 0xf2f2f0); parked.position.set(-4+2.1,0,1.3); g.add(parked);
   const s = label("ปั๊มน้ำมัน · บัตรน้ำมันองค์กร",{color:"#9fd4ff"}); s.position.set(GAS.x,9.2,GAS.z); scene.add(s);
   building(GAS.x-24,GAS.z+20,12,12,10,3); building(GAS.x+24,GAS.z+22,12,12,14,7); building(GAS.x+24,GAS.z-22,12,12,9,0);
 }
+
+var MOTO_RIDE = [];
 // motorcycle-taxi stands (orange vests) at a few corners
 [[-31,-31],[49,-31],[49,49],[-31,49],[-111,49]].forEach(([x,z])=>{
   const g = new THREE.Group(); g.position.set(x,0,z); scene.add(g);
   box(2.4,.5,.6,0x7a5b3d,0,.5,0,g); cyl(.06,.06,2.4,0x666,-1.1,1.2,-.3,g,6); box(2.6,.08,1.2,0x2f7fbf,0,2.4,0,g);
   for (let i=0;i<3;i++){
     const b = new THREE.Group(); b.position.set(-1.5+i*1.5,0,1.6); b.rotation.y=Math.PI/2; g.add(b);
-    box(.3,.5,1.5,pick([0x222222,0xb32424,0x2a52a0]),0,.55,0,b); [-.6,.6].forEach(z=>{ const w=cyl(.3,.3,.15,0x111111,0,.3,z,b,10); w.rotation.z=Math.PI/2; });
-    if (i<2){ box(.5,.7,.32,0xff7a1a,0,1.3,-.1,b); box(.32,.32,.32,0xc99b77,0,1.85,-.1,b); }
+    b.add(makeMoto(pick([0x1d1f22,0xb32424,0x2a52a0,0xe9e9e6]))); if (i<2) MOTO_RIDE.push(b);
   }
   const sp = label("วินมอเตอร์ไซค์",{size:26,scale:.7}); sp.position.set(0,3.6,0); g.add(sp);
 });
@@ -1325,7 +1589,7 @@ function skyTick(dt){
   skyDome.position.copy(camera.position);
   const bg = scene.background && scene.background.isColor ? scene.background : SKYU.bot.value;
   SKYU.bot.value.copy(scene.fog.color); SKYU.top.value.copy(bg); SKYU.top.value.offsetHSL(0, .12, -.14);
-  const day = clamp((hemi.intensity - .18)/.62, 0, 1);
+  const day = clamp((hemi.intensity - .26)/.84, 0, 1);
   const sd = new THREE.Vector3().copy(sun.position).sub(sun.target.position).normalize();
   sunDisc.position.copy(camera.position).addScaledVector(sd, 600); sunDisc.visible = day > .15 && sd.y > 0 && S.rain<=0; sunDisc.material.opacity = Math.min(1, day*1.4);
   CLOUDS.forEach(c=>{ c.userData.a += c.userData.sp*dt*.2; c.position.set(camera.position.x + Math.cos(c.userData.a)*c.userData.d, c.userData.y, camera.position.z + Math.sin(c.userData.a)*c.userData.d);
@@ -1340,19 +1604,32 @@ const lm = c => LMC[c] || (LMC[c] = new THREE.MeshLambertMaterial({color:c}));
 const SPH = (r, w=12, h=10) => gq(`s${r.toFixed(3)},${w},${h}`, ()=>new THREE.SphereGeometry(r, w, h));
 const HSPH = r => gq(`h${r.toFixed(3)}`, ()=>new THREE.SphereGeometry(r, 16, 8, 0, Math.PI*2, 0, Math.PI/2));
 const CYL = (a, b, h, s=12) => gq(`c${a.toFixed(3)},${b.toFixed(3)},${h},${s}`, ()=>new THREE.CylinderGeometry(a, b, h, s));
+var FAB = (()=>{ const noise = (w,h,fn) => { const t = canvasTex(w,h,(c)=>{ const im = c.createImageData(w,h); for (let y=0;y<h;y++) for (let x=0;x<w;x++){ const v = fn(x,y), i = (y*w+x)*4; im.data[i]=im.data[i+1]=im.data[i+2]=Math.max(0,Math.min(255,v)); im.data[i+3]=255; } c.putImageData(im,0,0); }); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; };
+  const weave = noise(64,64,(x,y)=>246 + ((x+y)%4<2?6:-6) + (Math.random()*10-5));
+  const denim = noise(64,64,(x,y)=>236 + ((x-y+64)%6<3?14:-10) + (Math.random()*16-8));
+  const hair = noise(128,64,(x,y)=>214 + 40*Math.sin(x*1.7 + Math.sin(x*.37)*3) * .5 + (Math.random()*40-20) - (y>56?20:0));
+  weave.repeat.set(3,3); denim.repeat.set(2,4); hair.repeat.set(4,1);
+  return {weave, denim, hair, HM:{}}; })();
+const hairMat = c => FAB.HM[c] || (FAB.HM[c] = new THREE.MeshLambertMaterial({color:c, map:FAB.hair}));
+var BACK_MAT = null;
 const BOX = (w, h, d) => gq(`b${w.toFixed(3)},${h},${d}`, ()=>new THREE.BoxGeometry(w, h, d));
 function pm(geo, mat, parent, x=0, y=0, z=0, sh=false){ const o = new THREE.Mesh(geo, mat); o.position.set(x, y, z); if (sh) o.castShadow = true; parent.add(o); return o; }
 // anatomical, muscular figure: same rig names as before (legL/legR/armL/armR) plus knees, elbows and head
+// partial sphere: phi 0 = left side, π/2 = front, π = right side, 3π/2 = back
+const PSPH = (r, p0, pl, t0, tl) => gq(`p${r},${p0.toFixed(2)},${pl.toFixed(2)},${t0.toFixed(2)},${tl.toFixed(2)}`, ()=>new THREE.SphereGeometry(r, 18, 10, p0, pl, t0, tl));
+// GTA-style character: real proportions, a styled face, a haircut, facial hair, clothes and accessories that tell you who they are
 function personModel(o){
-  const g = new THREE.Group(), r = {g};
-  const f = o.sex==="f", B = o.build || (f ? .92 : 1.05), W = f ? .86 : 1;
-  const skinHex = o.skin || 0xc99b77, skin = lm(skinHex), hairM = lm(o.hair!=null ? o.hair : 0x1a1a1a);
+  const g = new THREE.Group(), r = {g, ph:Math.random()*6};
+  const f = o.sex==="f", B = o.build || (f ? .92 : 1.05), W = f ? .86 : 1, top = o.top || (o.helmet ? "uniform" : "tee");
+  const skinHex = o.skin || 0xc99b77, skin = lm(skinHex), hairHex = o.hair!=null ? o.hair : 0x1a1a1a, hairM = hairMat(hairHex);
+  const shade = (h,k) => (Math.round(((h>>16)&255)*k)<<16) | (Math.round(((h>>8)&255)*k)<<8) | Math.round((h&255)*k), skinDark = lm(shade(skinHex,.82));
   r.skinHex = skinHex;
-  r.shirt = new THREE.MeshLambertMaterial({color:o.shirt}); r.pants = new THREE.MeshLambertMaterial({color:o.pants});
+  r.shirt = new THREE.MeshLambertMaterial({color:o.shirt, map:FAB.weave}); r.pants = new THREE.MeshLambertMaterial({color:o.bottom==="skirt" ? skinHex : o.pants, map:o.bottom==="skirt" ? null : FAB.denim});
   r.stripe = new THREE.MeshLambertMaterial({color:o.stripe||o.shirt});
   r.fore = new THREE.MeshLambertMaterial({color: o.ls ? o.shirt : skinHex});
-  const boot = lm(0x231d18), sole = lm(0x0e0e0e);
-  // legs: thigh + knee joint + shin + safety boot
+  const shoe = o.shoes || (top==="uniform" ? "boots" : f ? "flats" : "sneakers");
+  const shoeM = lm(shoe==="sneakers" ? (o.shoeC||0xeeeeea) : shoe==="flats" ? 0x2a2420 : 0x231d18), sole = lm(shoe==="sneakers" ? 0xffffff : 0x0e0e0e);
+  // legs
   const leg = side => {
     const L = new THREE.Group(); L.position.set(side*.16*B*(f?1.04:1), 1.0, 0); g.add(L);
     pm(SPH(.15*B, 10, 8), r.pants, L);
@@ -1360,47 +1637,95 @@ function personModel(o){
     const K = new THREE.Group(); K.position.y = -.5; L.add(K);
     pm(SPH(.105*B, 10, 8), r.pants, K);
     const calf = pm(CYL(.11*B, .075*B, .4), r.pants, K, 0, -.2, -.01, true); calf.scale.z = 1.05;
-    pm(CYL(.085*B, .095*B, .13, 10), boot, K, 0, -.39, 0);
-    pm(BOX(.19*B, .1, .34), boot, K, 0, -.45, .07);
-    pm(BOX(.2*B, .03, .36), sole, K, 0, -.495, .07);
+    if (shoe==="boots") pm(CYL(.085*B, .095*B, .13, 10), shoeM, K, 0, -.39, 0);
+    else pm(CYL(.07*B, .072*B, .1, 10), r.pants, K, 0, -.4, 0);
+    pm(BOX(.18*B, shoe==="boots" ? .1 : .085, .33), shoeM, K, 0, -.45, .07);
+    pm(BOX(.19*B, .03, .35), sole, K, 0, -.495, .07);
+    if (shoe==="sneakers") pm(BOX(.185*B, .02, .12), lm(0xffffff), K, 0, -.43, .19);
     return [L, K];
   };
   [r.legL, r.kneeL] = leg(-1); [r.legR, r.kneeR] = leg(1);
-  // hips, belt
+  // hips & belt
   const pel = pm(CYL(.27*B*(f?1.08:1), .24*B, .26, 14), r.pants, g, 0, 1.08, 0, true); pel.scale.z = .66;
+  if (o.bottom==="skirt"){ const sk = pm(CYL(.27*B, .37*B, .58, 16), lm(o.pants), g, 0, .9, 0, true); sk.scale.z = .75; }
   const belt = pm(CYL(.262*B, .262*B, .07, 14), lm(0x2a2118), g, 0, 1.22, 0); belt.scale.z = .68;
   pm(BOX(.1, .07, .03), lm(0xb9b6ad), g, 0, 1.22, .18*B);
-  r.pouch = pm(BOX(.12, .16, .08), lm(0x3b2e22), g, .2*B, 1.16, .1*B); r.pouch.visible = !!o.helmet;
-  // torso with V-taper, chest, shoulders and traps
-  const tw = (f ? .23 : .25)*B, tc = .36*B*W;
-  const tor = pm(CYL(tc, tw, .62, 16), r.shirt, g, 0, 1.53, 0, true); tor.scale.z = .62;
+  r.pouch = pm(BOX(.12, .16, .08), lm(0x3b2e22), g, .2*B, 1.16, .1*B); r.pouch.visible = top==="uniform";
+  // torso
+  const tw = (f ? .22 : .235)*B, tc = .37*B*W;
+  const tor = pm(CYL(tc, tw, .62, 16), r.shirt, g, 0, 1.53, 0, true); tor.scale.z = .62; r.chest = tor;
   const ch = pm(SPH(.29*B*W, 14, 10), r.shirt, g, 0, 1.71, .015); ch.scale.set(1.2, .56, .74);
   if (!f) [-1,1].forEach(s=>{ const p = pm(SPH(.125*B, 10, 8), r.shirt, g, s*.115*B, 1.68, .125*B); p.scale.set(1.15, .78, .55); });
   else [-1,1].forEach(s=>{ const p = pm(SPH(.095, 10, 8), r.shirt, g, s*.095, 1.61, .14); p.scale.set(1, .95, .8); });
   if (o.belly){ const b = pm(SPH(.2*B, 12, 10), r.shirt, g, 0, 1.37, .09); b.scale.set(1.05, .85, .8); }
-  const tr = pm(SPH(.21*B, 12, 8), r.shirt, g, 0, 1.86, -.02); tr.scale.set(1.75*W, .42, .8);
-  const lat = pm(SPH(.24*B*W, 12, 8), r.shirt, g, 0, 1.6, -.03); lat.scale.set(1.35, .9, .62);   // lats / back width
-  const rad = y => tw + (tc - tw) * clamp((y - 1.22)/.62, 0, 1);
+  const tr = pm(SPH(.21*B, 12, 8), r.shirt, g, 0, 1.86, -.02); tr.scale.set((f ? 1.75 : 1.86)*W, .42, .8);
+  const lat = pm(SPH(.24*B*W, 12, 8), r.shirt, g, 0, 1.6, -.03); lat.scale.set(1.35, .9, .62);
+  const rad = y => tw + (tc - tw) * clamp((y - 1.22)/.62, 0, 1), FZ = .225*B;   // FZ = chest front
   r.s1 = pm(CYL(rad(1.39)+.012, rad(1.33)+.012, .06, 16), r.stripe, g, 0, 1.36, 0); r.s1.scale.z = .64;
   r.s2 = pm(CYL(rad(1.69)+.03, rad(1.63)+.03, .06, 16), r.stripe, g, 0, 1.66, 0); r.s2.scale.z = .66;
-  r.badge = pm(BOX(.09, .06, .02), lm(0x203c8c), g, -.13*B, 1.76, .225*B); r.badge.visible = !!o.helmet;
+  r.badge = pm(BOX(.09, .06, .02), lm(0x203c8c), g, -.13*B, 1.76, FZ); r.badge.visible = top==="uniform";
+  if (top==="uniform"){ BACK_MAT = BACK_MAT || new THREE.MeshLambertMaterial({transparent:true, depthWrite:false, map:canvasTex(256,128,(c,w,h)=>{ c.clearRect(0,0,w,h); c.fillStyle="#1f3d6b"; c.font='800 64px "IBM Plex Sans Thai",sans-serif'; c.textAlign="center"; c.fillText("กฟน.",w/2,66); c.font='700 24px "IBM Plex Sans Thai",sans-serif'; c.fillText("การไฟฟ้านครหลวง",w/2,106); })});
+    const bp = new THREE.Mesh(new THREE.PlaneGeometry(.36*B,.18*B), BACK_MAT); bp.position.set(0,1.66,-.218*B); bp.rotation.y = Math.PI; g.add(bp); r.backPrint = bp; }
+  // collars, plackets, overlays
+  const collarM = top==="polo"||top==="shirt"||top==="uniform" ? r.shirt : null;
+  if (collarM) [-1,1].forEach(s=>{ const c = pm(BOX(.13, .05, .1), collarM, g, s*.07, 1.92, .07); c.rotation.set(-.5, 0, s*.5); });
+  if (top==="polo"||top==="shirt"){ pm(BOX(.04, top==="shirt" ? .55 : .2, .015), lm(shade(o.shirt,.9)), g, 0, top==="shirt" ? 1.52 : 1.78, FZ+.01); for (let k=0;k<(top==="shirt"?5:2);k++) pm(SPH(.012,6,4), lm(0xf4f2ea), g, 0, 1.84-k*.12, FZ+.022); }
+  if (top==="shirt") pm(BOX(.11, .1, .015), lm(shade(o.shirt,.93)), g, .12*B, 1.7, FZ-.005);
+  if (top==="vest" || top==="jacket"){
+    const vm = lm(o.top2 || (top==="vest" ? 0xc8f03c : 0x2d3540)), vest = pm(CYL(tc+.035, tw+.03, .66, 16), vm, g, 0, 1.52, 0, true); vest.scale.z = .66;
+    if (top==="jacket") pm(BOX(.09, .62, .02), r.shirt, g, 0, 1.53, FZ+.03);
+    if (top==="vest"){ const sv = lm(0xd9dde0); [1.36,1.62].forEach(y=>{ const s = pm(CYL(rad(y)+.05, rad(y)+.05, .05, 16), sv, g, 0, y, 0); s.scale.z = .68; }); }
+  }
+  if (o.apron){ pm(BOX(.46*B, .95, .02), lm(o.apron), g, 0, 1.2, FZ+.04); pm(BOX(.02, .3, .02), lm(o.apron), g, -.1, 1.82, .12); pm(BOX(.02, .3, .02), lm(o.apron), g, .1, 1.82, .12); }
   // neck & head
   pm(CYL(.095*B, .115*B, .2, 10), skin, g, 0, 1.98, 0);
+  if (o.necklace){ const nk = pm(gq("neck",()=>new THREE.TorusGeometry(.11,.008,6,20)), lm(0xd4a52a), g, 0, 1.93, .02); nk.rotation.x = Math.PI/2.4; }
   const H = new THREE.Group(); H.position.set(0, 2.21, 0); g.add(H); r.head = H;
-  const hd = pm(SPH(.2, 16, 14), skin, H, 0, 0, 0, true); hd.scale.set(.88, 1.06, 1);
-  const jaw = pm(SPH(.155, 12, 10), skin, H, 0, -.085, .045); jaw.scale.set(f ? .88 : 1.04, .78, .95);
-  const nose = pm(gq("nose", ()=>new THREE.ConeGeometry(.032, .085, 6)), skin, H, 0, -.015, .2); nose.rotation.x = Math.PI/2;
+  const hd = pm(SPH(.2, 18, 16), skin, H, 0, 0, 0, true); hd.scale.set(.86, 1.06, .98);
+  const jaw = pm(SPH(.155, 14, 10), skin, H, 0, -.09, .045); jaw.scale.set(f ? .84 : 1.1, f ? .8 : .84, .95);
+  [-1,1].forEach(s=>{ const ck = pm(SPH(.06, 8, 6), skin, H, s*.085, -.02, .14); ck.scale.set(1,.7,.6); });
+  const nose = pm(gq("nose", ()=>new THREE.ConeGeometry(.03, .085, 6)), skin, H, 0, -.012, .2); nose.rotation.x = Math.PI/2;
+  pm(BOX(.03, .07, .03), skin, H, 0, .02, .19);
+  pm(SPH(.022, 6, 4), skinDark, H, -.016, -.05, .2); pm(SPH(.022, 6, 4), skinDark, H, .016, -.05, .2);
+  const white = lm(0xf5f3ee), iris = lm(o.eyes || 0x2a1d14), lid = skinDark, hb = hairM;
   [-1,1].forEach(s=>{
-    const ear = pm(SPH(.045, 8, 6), skin, H, s*.172, 0, 0); ear.scale.set(.45, 1, .8);
-    pm(SPH(.022, 8, 6), lm(0x1a1410), H, s*.068, .035, .178);
-    const bw = pm(BOX(.075, .016, .02), hairM, H, s*.068, .082, .18); bw.rotation.z = s*(f ? -.12 : .06);
+    const ear = pm(SPH(.045, 8, 6), skin, H, s*.17, 0, 0); ear.scale.set(.45, 1, .8);
+    const sc = pm(SPH(.03, 10, 8), white, H, s*.068, .033, .162); sc.scale.set(1.15, f ? .74 : .6, .5);
+    pm(SPH(.017, 8, 6), iris, H, s*.068, .033, .177);
+    const ul = pm(BOX(.07, .014, .025), lid, H, s*.068, .055, .168); ul.rotation.z = s*-.08;
+    const bw = pm(BOX(f ? .08 : .085, o.brows||(f ? .016 : .024), .024), hb, H, s*.068, f ? .085 : .078, .178); bw.rotation.z = s*(f ? -.14 : .1);
   });
-  pm(BOX(.075, .012, .012), lm(0x7a3d33), H, 0, -.1, .186);
-  if (o.hair!=null){
-    const cap = pm(HSPH(.212), hairM, H, 0, .015, -.008); cap.scale.set(.92, .95, 1.04);
-    if (o.long){ const bk = pm(SPH(.2, 12, 10), hairM, H, 0, -.12, -.1); bk.scale.set(.95, 1.45, .6); pm(SPH(.07, 8, 6), hairM, H, 0, -.02, -.21); }
-    else { const bk = pm(SPH(.19, 12, 8), hairM, H, 0, -.03, -.06); bk.scale.set(.93, .75, .85); }
-  }
+  const lipC = lm(f ? (o.lips||0xb5585a) : shade(skinHex,.8));
+  pm(BOX(.075, .016, .02), lipC, H, 0, -.095, .184); pm(BOX(.062, .02, .02), lipC, H, 0, -.115, .18);
+  // hair
+  const hs = o.hairStyle || (o.long ? "long" : "short");
+  r.hairX = new THREE.Group(); H.add(r.hairX);
+  // hairline sits above the brows: a crown cap plus a back-and-sides band down to the ears
+  if (hs!=="bald"){ const hr = hs==="buzz" ? .206 : .214, cap = pm(PSPH(hr, 0, Math.PI*2, 0, 1.08), hairM, H, 0, .012, -.006); cap.scale.set(.92, hs==="buzz" ? .92 : 1, 1.04);
+    const band = pm(PSPH(hr, Math.PI*.88, Math.PI*1.24, 1.0, hs==="buzz" ? .62 : .78), hairM, H, 0, .012, -.006); band.scale.set(.92, 1, 1.04); }
+  if (hs==="side"){ const fr = pm(BOX(.28, .06, .14), hairM, r.hairX, .02, .17, .1); fr.rotation.z = -.22; const vol = pm(SPH(.2, 12, 8), hairM, r.hairX, 0, .1, 0); vol.scale.set(.95, .4, 1.04); }
+  if (hs==="quiff"){ const vol = pm(SPH(.2, 12, 8), hairM, r.hairX, 0, .11, -.01); vol.scale.set(.93, .42, 1.04);
+    const q = pm(SPH(.12, 10, 8), hairM, r.hairX, .01, .19, .1); q.scale.set(1.15, .62, .9); q.rotation.x = -.35;
+    [-1,1].forEach(s=>{ const fade = pm(PSPH(.209, s<0 ? 0 : Math.PI*.78, Math.PI*.22, 1.0, .55), hairM, H, 0, .012, -.006); fade.scale.set(.92, 1, 1.04); }); }
+  if (hs==="slick"){ const vol = pm(SPH(.205, 12, 8), hairM, r.hairX, 0, .08, -.01); vol.scale.set(.95, .45, 1.06); }
+  if (hs==="spiky") for (let k=0;k<9;k++){ const a = k/9*Math.PI*2, sp = pm(gq("spike",()=>new THREE.ConeGeometry(.04,.12,5)), hairM, r.hairX, Math.cos(a)*.1, .17, Math.sin(a)*.1+.01); sp.rotation.set(Math.sin(a)*.5, 0, -Math.cos(a)*.5); }
+  if (hs==="bald"){ const ring = pm(PSPH(.205, Math.PI*.9, Math.PI*1.2, .95, .8), hairM, H, 0, 0, -.005); ring.scale.set(.9, 1.04, 1.0); }
+  if (hs==="long"){ const bk = pm(SPH(.2, 12, 10), hairM, r.hairX, 0, -.12, -.1); bk.scale.set(.95, 1.45, .6); [-1,1].forEach(s=>{ const st = pm(BOX(.05, .26, .1), hairM, r.hairX, s*.165, -.07, .04); st.rotation.z = s*.08; }); }
+  if (hs==="ponytail"){ const pt = pm(CYL(.05, .02, .38, 8), hairM, r.hairX, 0, -.1, -.24); pt.rotation.x = .35; pm(SPH(.055, 8, 6), hairM, r.hairX, 0, .06, -.2); }
+  if (hs==="bob"){ const bb = pm(PSPH(.228, Math.PI*.82, Math.PI*1.36, .35, 1.45), hairM, r.hairX, 0, .0, -.005); bb.scale.set(.95, 1, 1.04); }
+  if (hs==="bun") pm(SPH(.085, 10, 8), hairM, r.hairX, 0, .13, -.17);
+  // facial hair
+  const fh = o.facial;
+  if (fh==="mustache"||fh==="goatee"||fh==="beard") pm(BOX(.12, .028, .03), hairM, H, 0, -.07, .19);
+  if (fh==="goatee") pm(BOX(.065, .075, .04), hairM, H, 0, -.17, .165);
+  if (fh==="beard"||fh==="stubble"){ const bm = fh==="stubble" ? new THREE.MeshLambertMaterial({color:hairHex, transparent:true, opacity:.35}) : hairM; const bd = pm(PSPH(.168, 0, Math.PI, 1.75, .95), bm, H, 0, -.035, .03); bd.scale.set(f?.88:1.04, .95, 1.02); }
+  // glasses
+  if (o.glasses){ const fm = lm(o.glasses==="sun" ? 0x111111 : 0x2b2b2b);
+    [-1,1].forEach(s=>{ const rim = pm(gq("rim",()=>new THREE.TorusGeometry(.038,.006,6,16)), fm, H, s*.068, .033, .2); if (o.glasses==="sun"){ const ln = pm(gq("lens",()=>new THREE.CircleGeometry(.036,14)), new THREE.MeshBasicMaterial({color:0x0b0d10, transparent:true, opacity:.85}), H, s*.068, .033, .201); } pm(BOX(.012, .012, .2), fm, H, s*.105, .04, .1); });
+    pm(BOX(.035, .008, .008), fm, H, 0, .04, .2); }
+  // cap
+  if (o.cap){ const cm = lm(o.cap), cg = new THREE.Group(); cg.position.y = .03; if (o.capBack) cg.rotation.y = Math.PI; H.add(cg); r.capG = cg;
+    const dome = pm(HSPH(.222), cm, cg); dome.scale.set(.95, .72, 1.05); const br = pm(BOX(.24, .02, .17), cm, cg, 0, .02, .27); br.rotation.x = .12; pm(SPH(.02,6,4), cm, cg, 0, .16, 0); }
   // hard hat
   r.hat = new THREE.Group(); r.hat.position.y = .05; H.add(r.hat);
   const yel = lm(0xffd23f);
@@ -1408,7 +1733,8 @@ function personModel(o){
   pm(BOX(.05, .03, .44), yel, r.hat, 0, .205, 0);
   r.brim = pm(CYL(.29, .29, .025, 18), yel, r.hat, 0, .005, .035); r.brim.scale.z = 1.12;
   r.hat.visible = !!o.helmet;
-  // arms: deltoid, sleeve, biceps, elbow, forearm, hand
+  H.scale.setScalar(f ? .92 : .88);   // smaller head = taller, heroic proportions
+  // arms
   const arm = side => {
     const A = new THREE.Group(); A.position.set(side*.43*B*W, 1.86, 0); g.add(A);
     pm(SPH(.128*B*W, 12, 10), r.shirt, A, side*.01, -.03, 0, true);
@@ -1416,23 +1742,36 @@ function personModel(o){
     pm(CYL(.112*B*W, .088*B*W, .27), r.fore, A, 0, -.33, 0, true);
     const bi = pm(SPH(.08*B*W, 10, 8), r.fore, A, 0, -.3, .042*B); bi.scale.set(1, 1.45, .95);
     const tri = pm(SPH(.075*B*W, 10, 8), r.fore, A, 0, -.3, -.04*B); tri.scale.set(1, 1.5, .9);
+    if (top==="vest"||top==="jacket"){ if (top==="jacket") pm(CYL(.125*B*W, .1*B*W, .42), lm(o.top2||0x2d3540), A, 0, -.25, 0); }
     const E = new THREE.Group(); E.position.y = -.47; A.add(E);
     pm(SPH(.088*B*W, 10, 8), r.fore, E);
     pm(CYL(.098*B*W, .066*B*W, .38), r.fore, E, 0, -.19, .005, true);
-    pm(BOX(.085, .14, .055), skin, E, 0, -.44, .01);
-    pm(BOX(.03, .07, .03), skin, E, side*-.045, -.41, .035);
+    pm(BOX(.085, .13, .055), skin, E, 0, -.43, .01);
+    for (let k=0;k<4;k++) pm(BOX(.016, .06, .02), skin, E, -.03+k*.02, -.52, .02);
+    pm(BOX(.03, .07, .03), skin, E, side*-.045, -.4, .035);
+    if (o.watch && side<0) pm(BOX(.08, .035, .075), lm(o.watch===true ? 0x2a2a2a : o.watch), E, 0, -.34, 0);
     E.rotation.x = -.2;
     return [A, E];
   };
   [r.armL, r.elbowL] = arm(-1); [r.armR, r.elbowR] = arm(1);
+  // accessories
+  if (o.lanyard){ [-1,1].forEach(s=>{ const ly = pm(BOX(.018, .34, .01), lm(o.lanyard), g, s*.06, 1.74, FZ+.035); ly.rotation.z = s*.28; }); pm(BOX(.08, .11, .01), lm(0xffffff), g, 0, 1.53, FZ+.045); pm(BOX(.06, .03, .012), lm(0x1f6fbf), g, 0, 1.56, FZ+.05); }
+  if (o.radio){ pm(BOX(.07, .15, .05), lm(0x1b1b1b), g, -.24*B, 1.13, .06); pm(CYL(.008, .008, .14, 4), lm(0x1b1b1b), g, -.25*B, 1.27, .06); }
+  if (o.bag){ const st = pm(BOX(.04, .78, .015), lm(0x3a2a1c), g, 0, 1.55, FZ+.05); st.rotation.z = .62; pm(BOX(.26, .2, .09), lm(o.bag), g, .27*B, 1.14, .1); }
+  if (o.pen) pm(CYL(.01, .01, .1, 5), lm(0x1f6fbf), g, .14*B, 1.74, FZ+.005);
   return r;
 }
-// walking pose with knee and elbow bend
+// walking pose with knee and elbow bend; idle breathing and glances when standing
 function animLimbs(m, s){
   m.legL.rotation.x = s; m.legR.rotation.x = -s; m.armL.rotation.x = -s*.8; m.armR.rotation.x = s*.8;
   if (m.kneeL){ m.kneeL.rotation.x = Math.max(0, -s)*1.15 + Math.abs(s)*.15; m.kneeR.rotation.x = Math.max(0, s)*1.15 + Math.abs(s)*.15;
     m.elbowL.rotation.x = -.2 - Math.max(0, s)*.7; m.elbowR.rotation.x = -.2 - Math.max(0, -s)*.7; }
+  const t = performance.now()/1000 + (m.ph||0);
+  if (m.chest) m.chest.scale.y = 1 + Math.sin(t*2.1)*.018;
+  if (m.head){ m.head.rotation.y = Math.abs(s) < .01 ? Math.sin(t*.37)*.28 + Math.sin(t*1.3)*.04 : 0; m.head.rotation.x = Math.abs(s) < .01 ? Math.sin(t*.53)*.05 : .04; }
+  if (m.armL){ m.armL.rotation.z = Math.abs(s) < .01 ? -.07 : -.03; m.armR.rotation.z = -m.armL.rotation.z; }
 }
+
 const OUTFITS = {
   uniform:{n:"ชุดฟอร์ม กฟน. (เสื้อส้ม แถบสะท้อนแสง)", shirt:0xff8a1e, pants:0x2b3a4f, stripe:0xd9e85a, helmet:true},
   casual:{n:"ชุดลำลอง เสื้อยืด กางเกงยีนส์", shirt:0x3f7fbf, pants:0x34495e, stripe:0x3f7fbf},
@@ -1444,21 +1783,20 @@ const PL = {};
 function wear(k){
   const o = OUTFITS[k]; S.outfit = k;
   PL.m.shirt.color.setHex(o.shirt); PL.m.pants.color.setHex(o.pants); PL.m.stripe.color.setHex(o.stripe);
-  PL.m.hat.visible = PL.m.brim.visible = PL.m.badge.visible = PL.m.pouch.visible = !!o.helmet;
+  PL.m.hat.visible = PL.m.brim.visible = PL.m.badge.visible = PL.m.pouch.visible = !!o.helmet; PL.m.hairX.visible = !o.helmet;
   PL.m.fore.color.setHex(o.ls ? o.shirt : PL.m.skinHex);
 }
 function buildPlayer(){
   if (PL.m) player.remove(PL.m.g);
   const f = S.me && S.me.sex==="f";
-  const m = personModel({shirt:0xff8a1e, pants:0x2b3a4f, stripe:0xd9e85a, helmet:true, hair:0x1a1a1a, sex:f?"f":"m", long:f, build:f?1.0:1.2, skin:0xbf8f69});
+  const m = personModel({shirt:0xff8a1e, pants:0x2b3a4f, stripe:0xd9e85a, helmet:true, hair:0x1a1a1a, sex:f?"f":"m", hairStyle:f?"ponytail":"quiff", facial:f?null:"stubble", watch:true, radio:true, build:f?1.0:1.2, skin:0xbf8f69});
   player.add(m.g); PL.m = m; PL.legL=m.legL; PL.legR=m.legR; PL.armL=m.armL; PL.armR=m.armR;
 }
 buildPlayer();
 /* ---- personal motorbike ---- */
 const bike = new THREE.Group(); scene.add(bike);
 {
-  box(.35,.5,1.7,0xb32424,0,.75,0,bike); box(.3,.25,.7,0x1a1a1a,0,1.05,-.2,bike); box(.7,.08,.08,0x888888,0,1.25,.65,bike);
-  [-.7,.7].forEach(z=>{ const w=cyl(.36,.36,.14,0x111111,0,.36,z,bike,12); w.rotation.z=Math.PI/2; });
+  bike.add(makeMoto(0xb32424));
   const s = label("มอเตอร์ไซค์ของคุณ",{size:24,scale:.7}); s.position.set(0,2.4,0); bike.add(s);
 }
 {
@@ -1476,32 +1814,22 @@ const bike = new THREE.Group(); scene.add(bike);
   }
 }
 /* ---- truck (bucket truck) ---- */
-const truck = new THREE.Group(); scene.add(truck);
+const truck = makeBucketTruck(true); scene.add(truck);
 {
-  box(2.4,1.1,6.4,0xf4f4f0,0,1.15,0,truck); box(2.42,.3,6.42,0xff8a1e,0,1.25,0,truck);
-  box(2.3,1.1,2,0xf4f4f0,0,2.2,2.1,truck); box(2.2,.6,.05,0x223040,0,2.35,3.12,truck,false);
-  box(2.32,.35,.05,0xff8a1e,0,1.7,3.12,truck,false);
-  cyl(.25,.3,.8,0x777,0,2.1,-1.6,truck);
-  const pivot = new THREE.Group(); pivot.position.set(0,2.6,-1.6); truck.add(pivot);
-  const boom = box(.35,.35,6,0xff8a1e,0,0,3,pivot); pivot.rotation.x = -.06;
-  const bucket = new THREE.Group(); bucket.position.set(0,0,6); pivot.add(bucket); box(1,.9,1,0xffd23f,0,.2,0,bucket);
-  truck.userData.pivot = pivot; truck.userData.bucket = bucket;
-  [[-1.2,1.9],[1.2,1.9],[-1.2,-1.9],[1.2,-1.9]].forEach(([x,z])=>{ const w=cyl(.5,.5,.4,0x1c1c1c,x,.5,z,truck,12); w.rotation.z=Math.PI/2; });
-  const hl = new THREE.SpotLight(0xfff2d0, 0, 40, .5, .5, 1); hl.position.set(0,1.4,3.3); hl.target.position.set(0,0,14); truck.add(hl); truck.add(hl.target); truck.userData.hl=hl;
-  const s = label("รถกระเช้า กฟน.",{size:28,scale:.8}); s.position.set(0,5,0); truck.add(s);
+  const hl = new THREE.SpotLight(0xfff2d0, 0, 40, .5, .5, 1); hl.position.set(0,1.1,3.75); hl.target.position.set(0,0,14); truck.add(hl); truck.add(hl.target); truck.userData.hl=hl;
+  const s = label("รถกระเช้า กฟน.",{size:28,scale:.8}); s.position.set(0,5.4,0); truck.add(s);
 }
 
 /* ---- traffic & people ---- */
 const cars = [];
-for (let i=0;i<10;i++){
-  const g = new THREE.Group(); const c = pick([0xc23b2e,0x2e6cc2,0xf2f2f2,0x2b2b2b,0x9aa3ab,0xe1b23b,0x2f8a63]);
-  box(2,1,4.2,c,0,.8,0,g); box(1.8,.8,2.2,c,0,1.6,-.2,g); box(1.82,.5,2.22,0x22303d,0,1.6,-.2,g,false);
-  scene.add(g);
-  const v = i%2, road = pick(ROADS), dir = Math.random()<.5?1:-1;
-  cars.push({g, v, road, dir, t:R(-170,170), sp:R(9,15)});
+for (let i=0;i<18;i++){
+  const type = ["sedan","sedan","pickup","sedan","taxi","pickup","van","sedan","taxi"][i%9];
+  const g = makeCar(type, type==="taxi" ? pick([0xe8457a,0x3fa34d,0xf2d024,0x2a7fd4]) : pick(CAR_COLORS)); scene.add(g);
+  const v = i%2, road = ROADS[i%4], dir = (i>>1)%2 ? 1 : -1;
+  cars.push({g, v, road, dir, t:-170 + (i*47)%340, sp:R(9,14)});
 }
 const peds = [];
-for (let i=0;i<9;i++){
+for (let i=0;i<0;i++){
   const g = new THREE.Group(); const c = pick([0x3f6fb5,0xb53f62,0x5aa36a,0xe0c14a,0x7c5ab0,0xffffff]);
   box(.6,.9,.36,c,0,1.4,0,g); box(.5,.9,.3,0x333a44,0,.45,0,g); box(.38,.4,.38,pick([0xc99b77,0xa77a58,0xe2b896]),0,2.1,0,g);
   scene.add(g);
@@ -1615,6 +1943,7 @@ function advanceBase(mins, effort=0){
     S.hygiene = clamp(S.hygiene - (.012 + effort*.02 + (S.rain>0 && !S.inTruck ? .02 : 0))*per*(sleeping?.3:1), 0, 100);
     S.team.forEach(t => { if (t.wo && absMin()>=t.until) teamFinish(t); });
     if (S.lineQ.length) lineReplies();
+    lineMoodTick();
     const h = Math.floor(absMin()/60);
     while (S.lastHour < h){ S.lastHour++; onHour(S.lastHour); }
   }
@@ -2322,7 +2651,27 @@ const PEOPLE = [
   {id:"mom", name:"แม่", role:"แม่ที่บ้านต่างจังหวัด", sex:"f", p:"จ้ะ", tone:"mom", single:false, remote:true, likes:["ครอบครัว","อาหาร"], dislikes:[], gifts:[], f0:60},
 ];
 const PP = Object.fromEntries(PEOPLE.map(p=>[p.id,p]));
-const relOf = id => S.rel[id] || (S.rel[id] = {f:PP[id].f0||10, r:0, status:"", angry:0, day:-1, talks:0});
+// each coworker's own style: haircut, facial hair, glasses, clothes, accessories
+const STYLE = {
+  somchai:{hairStyle:"short", hair:0x6b6b6b, facial:"mustache", glasses:true, watch:true, radio:true},
+  wichai:{hairStyle:"spiky", cap:0xd94c3d, capBack:true, facial:"stubble", necklace:true},
+  kitti:{hairStyle:"buzz", facial:"goatee", top:"vest", top2:0xc8f03c, watch:0x8a8f94, radio:true},
+  namfon:{top:"polo", hairStyle:"bob", hair:0x3b2416, lanyard:0x1f6fbf, shoes:"sneakers", lips:0xc0606a},
+  praewa:{top:"shirt", hairStyle:"bun", glasses:true, lanyard:0xff8a1e, watch:0xd4a52a, pen:true},
+  mint:{hairStyle:"ponytail", hair:0x2a1810, lanyard:0xff8a1e},
+  ton:{hairStyle:"quiff", hair:0x2a1a10, necklace:true, facial:"stubble"},
+  nok:{hairStyle:"bob", watch:true},
+  bank:{hairStyle:"buzz", cap:0x1f4f9f, glasses:"sun", facial:"stubble"},
+  boss:{top:"shirt", hairStyle:"slick", hair:0x3a3a3a, glasses:true, facial:"mustache", watch:0xd4a52a, pen:true, lanyard:0x203c8c},
+  dang:{top:"tee", hairStyle:"bun", hair:0x5a5a5a, apron:0xf4f1e8, shoes:"flats", necklace:true},
+  chan:{hairStyle:"bald", hair:0xcfcfcf, facial:"mustache", glasses:true, watch:true},
+  beer:{hairStyle:"ponytail", hair:0x3a2416, watch:0xf2b6c6},
+  ann:{top:"shirt", hairStyle:"bob", glasses:true, necklace:true, bottom:"skirt", lanyard:0x8a5cb5, shoes:"flats", lips:0xa04a5a},
+  jom:{hairStyle:"quiff", lanyard:0xff8a1e},
+  fah:{hairStyle:"long", hair:0x4a2c1a, watch:0xffffff, bag:0xe0a330},
+  pong:{hairStyle:"buzz", facial:"beard", top:"vest", top2:0xff7a1a, watch:true, radio:true},
+};
+const relOf = id => S.rel[id] || (S.rel[id] = {f:PP[id].f0||10, r:0, status:"", angry:0, day:-1, talks:0, sulk:0, feel:""});
 const meP = () => S.me.sex==="f" ? "ค่ะ" : "ครับ";
 const meName = () => S.me.name || (S.me.sex==="f" ? "น้อง" : "น้อง");
 const fill = (s, p) => s.replace(/\{n\}/g, p?p.name:"").replace(/\{p\}/g, p?p.p:"").replace(/\{mp\}/g, meP()).replace(/\{me\}/g, meName());
@@ -2355,7 +2704,7 @@ function ensureTalkDay(r){ if (r.day!==today()){ r.day = today(); r.talks = 0; }
 const strHash = s => { let h = 7; for (let i=0;i<s.length;i++) h = (h*31 + s.charCodeAt(i))|0; return Math.abs(h); };
 const OFFICE_SPOTS = [[-14,18],[-8,22],[-2,19],[4,23],[10,18],[16,21],[-12,27],[6,28],[20,27],[0,30]];
 const NPCS = PEOPLE.filter(p=>!p.remote).map((p,i) => {
-  const m = personModel(Object.assign({sex:p.sex, belly:p.sex==="m" && p.age>=50, build:({kitti:1.13, bank:1.1, pong:1.16, wichai:1.06, jom:.97, boss:1.02})[p.id]}, p.look)); scene.add(m.g);
+  const m = personModel(Object.assign({sex:p.sex, belly:p.sex==="m" && p.age>=50, build:({kitti:1.13, bank:1.1, pong:1.16, wichai:1.06, jom:.97, boss:1.02})[p.id]}, p.look, STYLE[p.id]||{})); scene.add(m.g);
   const lab = label(p.name,{size:26,scale:.7}); lab.position.y = 3.1; m.g.add(lab);
   m.g.visible = false;
   return {p, m, i, x:0, z:0, vis:false, walk:0, bub:null, bubT:0, face:0};
@@ -2414,6 +2763,7 @@ function updateNPCs(dt){
     const sitting = plan.sit && l <= .35 && !n.leg;
     if (sitting){ const m = n.m; m.legL.rotation.x = m.legR.rotation.x = -1.5; m.kneeL.rotation.x = m.kneeR.rotation.x = 1.5; m.armL.rotation.x = m.armR.rotation.x = -.5; m.elbowL.rotation.x = m.elbowR.rotation.x = -.9; }
     g.position.set(n.x, sitting ? -.46 : 0, n.z);
+    { const hh = !!n.p.look.helmet && !roomAt(n.x, n.z) && !sitting; if (n.m.hat.visible !== hh){ n.m.hat.visible = hh; n.m.hairX.visible = !hh; if (n.m.capG) n.m.capG.visible = !hh; } }
     let df = ((n.face - g.rotation.y + Math.PI*3)%(Math.PI*2))-Math.PI; g.rotation.y += df*Math.min(1,dt*8);
     const pd = Math.hypot(S.px-n.x, S.pz-n.z);
     if (S.argue && (S.argue.a===n.p.id || S.argue.b===n.p.id) && n.bubT<=0) setBubble(n, pick(S.argue.a===n.p.id ? ARGUE_LINES_A : ARGUE_LINES_B), 3);
@@ -2625,12 +2975,27 @@ function lineIn(id, text, quiet){
   if (!sleeping && !quiet){ toast(`LINE · ${id==="team"?"กลุ่มทีม":PP[id].name}: ${text}`); sfx("line"); }
 }
 function lineOutBase(id, text, intent){
+  if (id!=="team" && PP[id]) relOf(id).waitAt = 0;
   const c = S.chats[id] || (S.chats[id] = []); c.push({m:1, t:text, at:absMin()}); if (c.length>60) c.shift();
   S.lineQ.push({id, intent, at:absMin()+RI(2,18)});
+}
+function lineMoodTick(){
+  const md = minOfDay(), d = today(), now = absMin();
+  PEOPLE.forEach(p=>{ if (!p.single || !isActive(p.id) || p.remote) return; const r = S.rel[p.id]; if (!r) return;
+    const close = r.status==="dating" || r.r>=45;
+    if (!close) return;
+    const last = (S.chats[p.id]||[]).slice(-1)[0];
+    if (last && !last.m && !r.waitAt && now - last.at < 5 && md>=7*60 && md<23*60 && /\?|ไหม|มั้ย|ยัง|ป่ะ|ป่าว|เหรอ|อะไร|ไง|ไหน/.test(last.t)) r.waitAt = last.at;
+    if (r.waitAt && now - r.waitAt > 180 && md>=7*60 && md<23*60){ r.waitAt = 0; r.sulk = clamp((r.sulk||0)+1, 0, 3); r.feel = "น้อยใจ"; relGain(p.id, -1, -2); lineIn(p.id, pick(["อ่านแล้วไม่ตอบ 😒","ยุ่งขนาดนั้นเลยเหรอ","…ไม่ตอบก็ได้"])); }
+    if (r.status!=="dating" || r.angry || r.sulk) return;
+    [[7*60+20,"gm",["อรุณสวัสดิ์นะ ☀️ วันนี้ขึ้นเสาระวังด้วยน้า","ตื่นยัง~ วันนี้สู้ๆ นะ 💪"]],[12*60+10,"ln",["กินข้าวยัง 🍚","เที่ยงนี้กินอะไรอะ คิดถึง"]],[17*60+20,"ev",["เลิกงานยัง ขับรถดีๆ นะ","เย็นนี้เจอกันไหม 🥰"]],[22*60+15,"gn",["ฝันดีนะ 💕","นอนได้แล้ว พรุ่งนี้มีงานเช้า 😴"]]]
+      .forEach(([at,k,msgs])=>{ const key = "lv"+k+p.id+d; if (md>=at && md<at+90 && !S.events[key] && Math.random()<.5){ S.events[key] = 1; lineIn(p.id, pick(msgs)); } });
+  });
 }
 function lineReplies(){
   for (let i=S.lineQ.length-1;i>=0;i--){ const q = S.lineQ[i]; if (absMin()>=q.at){ S.lineQ.splice(i,1); lineReply(q.id, q.intent); } }
 }
+const SULK_LINES = ["ก็แล้วแต่","ไม่รู้สิ","อืม","ไปคุยกับคนอื่นไป 😒","ไม่ได้งอน (งอน)","ถามทำไม","…","เออ"];
 function lineReplyBase(id, intent){
   if (id==="team"){
     const who = pick(PEOPLE.filter(p=>p.tech&&isActive(p.id)));
@@ -2644,7 +3009,13 @@ function lineReplyBase(id, intent){
   if (id==="mom") t = pick(["จ้าลูก","ดูแลตัวเองนะลูก","แม่คิดถึงนะ","กินข้าวเยอะๆ"]);
   else if (id==="tana") t = intent==="status" ? (S.fails.some(f=>!f.end) ? "ยังมีไฟดับค้าง "+S.fails.filter(f=>!f.end).map(f=>f.eqId).join(", ")+" ครับ" : "ระบบปกติครับ ไม่มีเหตุค้าง") : "รับทราบครับ";
   else if (r.angry>0 && intent!=="sorry") t = pick(["…","อ่านแล้วไม่ตอบ","ยังโกรธอยู่"]);
+  else if (r.sulk>0 && intent!=="sorry" && intent!=="ngor") t = fill(pick(SULK_LINES), p);
   else switch(intent){
+    case "ngor": if (!r.sulk){ relGain(id,1,p.single?1:0); t = pick(["งอนอะไร ไม่ได้งอนสักหน่อย 555","อ้อนอะไรเนี่ย 😆"]); break; }
+      if (Math.random() < .45 + r.f/250 + r.r/250){ r.sulk--; t = r.sulk ? pick(["…ก็ได้ ใจอ่อนนิดนึง","ยังไม่หายหรอกนะ แต่ก็ดีขึ้นแล้ว","อีกนิดนึง 😤"]) : pick(["ก็ได้… หายงอนแล้ว แต่ต้องเลี้ยงชานมนะ 😤💕","ดีกันก็ได้ 🥺 อย่าทำอีกนะ","ใจอ่อนเลยเนี่ย 😳"]); if (!r.sulk){ relGain(id,2,p.single?2:0); r.feel = "ดีใจ"; } }
+      else t = pick(["ง้อแค่นี้เองเหรอ","ไม่รู้ ไม่ฟัง","ก็แล้วแต่"]); break;
+    case "hurt": relGain(id,-4,-3); if (r.sulk>=2 || p.tone==="grumpy"){ r.angry++; r.feel = "โกรธ"; t = pick(["พูดแบบนี้ได้ไง 😡","โอเค ไม่ต้องคุยกันแล้ว"]); } else { r.sulk = Math.min(3, (r.sulk||0)+1); r.feel = "น้อยใจ"; t = pick(["…โอเค","ก็ได้ ไม่กวนแล้ว 😒","ทำไมพูดแบบนี้อะ"]); toast(`😤 ${p.name} งอนแล้ว — ต้องง้อ`, "bad"); } break;
+    case "partner": if (p.single && r.r>=60 && Math.random() < r.r/100){ r.status = "dating"; relGain(id,6,8); r.feel = "ดีใจ"; t = pick(["…ตกลง 🥹💕","รอให้ถามมานานแล้วนะ ตกลง!"]); toast(`❤ คบกับ${p.name}แล้ว!`, "good"); } else if (!p.single){ t = "มีคนอยู่แล้วนะ 😅"; } else { relGain(id,0,-2); t = pick(["ขอเวลาคิดก่อนนะ…","เร็วไปป่าวเนี่ย 😳"]); } break;
     case "hi": t = pick(["หวัดดี~","ว่าไง","มีอะไรเหรอ"]); break;
     case "what": t = pick(["ปิดใบงานอยู่","นอนดูซีรีส์","กินข้าวอยู่","ขับรถกลับบ้าน"]); break;
     case "eat": if (r.f>=25 && Math.random()<.4+r.f/150){ const dd = md<17*60+30?today():today()+1; if (!S.appts.some(a=>a.id===id&&!a.done)) S.appts.push({id, at:dd*1440+18*60+30, kind:p.single&&r.r>=35?"date":"meal", done:false}); t = `ไปสิ! เจอกัน 18:30 ที่ตลาด${dd===today()?"":" พรุ่งนี้"}นะ`; } else t = pick(["ไม่ว่างอะ ไว้วันหลังนะ","ติดธุระ ขอโทษน้า"]); break;
@@ -2654,8 +3025,10 @@ function lineReplyBase(id, intent){
     case "thanks": relGain(id,1); t = pick(["ยินดีเลย","สบายมาก","ไว้เลี้ยงกาแฟก็พอ ☕"]); break;
     case "sticker": relGain(id,.5); t = pick(["😂","👍","🤣","🥰","555"]); break;
     case "miss": if (r.r>=40 || r.status==="dating"){ relGain(id,1,3); t = pick(["คิดถึงเหมือนกัน 🥰","เขินนะ…","พรุ่งนี้เจอกันนะ"]); } else { relGain(id,-2,-1); t = pick(["?? ส่งผิดคนป่าว 😅","เอ่อ…"]); } break;
-    case "sorry": r.angry = Math.max(0, r.angry-1); relGain(id,3); t = r.angry ? "ยังไม่หายโกรธนะ" : "อืม ไม่เป็นไรแล้ว"; break;
-    default: t = "👍";
+    case "sorry": if (r.angry){ r.angry = Math.max(0, r.angry-1); relGain(id,3); t = r.angry ? "ยังไม่หายโกรธนะ" : "อืม ไม่เป็นไรแล้ว"; }
+      else if (r.sulk){ r.sulk--; relGain(id,2); t = r.sulk ? pick(["ขอโทษแล้วไงต่อ 😒","…อืม"]) : pick(["หายแล้วก็ได้ 🥺","ดีกันนะ"]); if (!r.sulk) r.feel = "ดีใจ"; }
+      else t = pick(["ขอโทษเรื่องอะไรอะ 555","ไม่เป็นไรเลย"]); break;
+    default: t = (r.status==="dating" || r.r>=50) ? pick(["อือ 🥰","555 แล้วตอนนี้ทำอะไรอยู่","คิดถึงอะ","เลิกงานแล้วโทรหาหน่อยนะ"]) : "👍";
   }
   lineIn(id, t);
 }
@@ -2677,6 +3050,9 @@ function quickRepliesBase(id){
   if (p.tech) q.push(["ฝากรับใบงาน PM สักใบได้ไหม {mp}","work"]);
   if (p.single && (r.r>=20 || r.status==="dating")) q.push(["คิดถึงนะ","miss"]);
   if (r.angry>0) q.push(["ขอโทษนะ เรื่องเมื่อกี้","sorry"]);
+  if (r.sulk>0) q.push(["อย่างอนน้า ขอโทษจริงๆ 🥺","ngor"],["[สติกเกอร์ หมีกอด] ดีกันนะ","ngor"],["เย็นนี้เลี้ยงชานมไข่มุก ง้อแล้วน้า","ngor"]);
+  else if (p.single && r.f>=15) q.push(["วันนี้น่ารักจังเลย","miss"]);
+  if (p.single && r.r>=55 && r.status!=="dating") q.push(["เป็นแฟนกันไหม","partner"]);
   return q;
 }
 bodyActs.qr = k => { const [t,i] = quickReplies(CHATV)[+k]; lineOut(CHATV, fill(t, CHATV==="team"?null:PP[CHATV]), i); sfx("click"); renderChat(); };
@@ -2689,7 +3065,7 @@ const aiOn = () => AI.ok && !AI.blocked && S.aiChat !== false;
 function personaOf(id){
   const p = PP[id], r = relOf(id);
   return `${p.name} (${p.sex==="f"?"หญิง":"ชาย"}${p.age?` อายุ ${p.age}`:""}) — ${p.role}. บุคลิก: ${TONE_DESC[p.tone]||p.tone}. ชอบ: ${(p.likes||[]).join(", ")||"-"}. ไม่ชอบ: ${(p.dislikes||[]).join(", ")||"-"}. คำลงท้ายที่ใช้: "${p.p||"-"}". ${p.single?"โสด":"มีครอบครัว/ไม่โสด"}. `
-    + `ความสัมพันธ์กับผู้เล่น: มิตรภาพ ${Math.round(r.f)}/100, ความรู้สึกโรแมนติก ${Math.round(r.r)}/100${r.status==="dating"?" — เป็นแฟนกับผู้เล่นแล้ว":""}${r.angry?" — ตอนนี้ยังโกรธผู้เล่นอยู่":""}${S.gone[id]?" — ลาออก/เกษียณจากที่ทำงานไปแล้ว":""}.`;
+    + `ความสัมพันธ์กับผู้เล่น: มิตรภาพ ${Math.round(r.f)}/100, ความรู้สึกโรแมนติก ${Math.round(r.r)}/100${r.status==="dating"?" — เป็นแฟนกับผู้เล่นแล้ว":""}${r.angry?" — ตอนนี้ยังโกรธผู้เล่นอยู่":""}${r.sulk?` — ตอนนี้กำลังงอนผู้เล่นอยู่ (ระดับ ${r.sulk}/3) อยากให้ผู้เล่นง้อ ยังไม่หายง่ายๆ`:""}${r.feel?` — อารมณ์ล่าสุด: ${r.feel}`:""}${S.gone[id]?" — ลาออก/เกษียณจากที่ทำงานไปแล้ว":""}.`;
 }
 function worldBrief(){
   const md = minOfDay(), d = today(), open = S.wos.filter(w=>w.status!=="done"), fails = S.fails.filter(f=>!f.end);
@@ -2704,28 +3080,34 @@ function transcript(id, n=14){
   return (S.chats[id]||[]).slice(-n).map(m => (m.m ? `${meName()} (ผู้เล่น)` : (id==="team" ? "" : PP[id].name)) + (m.m || id!=="team" ? ": " : "") + m.t).join("\n");
 }
 const RULES = `กติกาการตอบ:
-- ตอบเป็นภาษาไทยแบบพิมพ์แชต LINE จริงๆ สั้น 1–2 บรรทัด ใช้ภาษาพูด อีโมจิได้พอดีๆ ห้ามบรรยายท่าทางในวงเล็บ ห้ามพูดว่าเป็น AI ตัวละคร หรือเกม
-- อยู่ในบุคลิกและระดับความสัมพันธ์ตอนนี้: ถ้ายังโกรธให้ตอบห้วนๆ ถ้ามิตรภาพต่ำอย่าทำตัวสนิท ถ้าผู้เล่นจีบแต่ความรู้สึกโรแมนติกยังต่ำหรือตัวละครไม่โสด ให้ปฏิเสธนุ่มๆ หรือเขินตามบุคลิก
+- พิมพ์แบบแชต LINE ของคนไทยจริงๆ ภาษาพูดเป็นธรรมชาติ ส่งได้ 1–3 ข้อความสั้นๆ ต่อครั้ง (เหมือนคนพิมพ์แยกบรรทัด) ใช้อีโมจิ คำอุทาน 555 หรือ [สติกเกอร์ …] ได้ตามบุคลิก ห้ามบรรยายท่าทางในวงเล็บ ห้ามพูดว่าเป็น AI ตัวละคร หรือเกม
+- มีความรู้สึกจริง ตอบสนองตามอารมณ์: ถูกชมจะดีใจหรือเขิน ถูกจีบถ้าความรู้สึกโรแมนติกยังต่ำให้ปัดนุ่มๆ หรือแซวกลับ ถ้าปานกลางให้เขินและหยอดกลับนิดๆ ถ้าสูงหรือเป็นแฟนกันแล้วให้หยอดกลับหวานๆ อ้อนได้ เรียกชื่อเล่นหรือคำหวานได้ ตัวละครที่ไม่โสดห้ามรับการจีบ
+- งอนได้จริง: ถ้าผู้เล่นพูดไม่ดี ตอบห้วน เมินเฉย ทิ้งนัด หรือพูดถึงคนอื่นแบบหึงได้ ให้เริ่มงอน (sulk +1) แล้วตอบแบบคนงอน เช่น "ก็แล้วแต่" "ไม่รู้สิ" "ไปคุยกับคนอื่นไป" ตอบสั้น ไม่ค่อยอยากคุย
+- ระหว่างงอน ผู้เล่นต้องง้อ: ถ้าผู้เล่นขอโทษจริงใจ ง้อน่ารัก หรือชวนไปเลี้ยงอะไร ให้ใจอ่อนทีละขั้น (sulk -1) อาจแกล้งงอนต่ออีกนิดก่อนหายจริงตามบุคลิก ถ้าง้อแบบขอไปที ไม่ต้องลด พอหายงอนแล้วให้แสดงว่าดีกันแล้วจริงๆ
+- ถ้าโกรธจริง (ไม่ใช่แค่งอน) ให้ตอบห้วนและต้องขอโทษจริงจังถึงจะหาย ถ้ามิตรภาพต่ำอย่าทำตัวสนิท
+- จำเรื่องในแชตที่ผ่านมาและต่อบทสนทนาให้ต่อเนื่อง ถามกลับหรือชวนคุยเรื่องอื่นได้บ้าง ไม่ต้องตอบแค่สั้นๆ ทุกครั้ง
 - เรื่องงานให้อ้างอิงจากสถานการณ์ด้านบนเท่านั้น ห้ามแต่งรหัสอุปกรณ์หรือตัวเลขใหม่
-- ถ้าเป็นช่วงดึก (23:00–06:00) ให้ตอบแบบง่วงๆ สั้นๆ
-- ถ้าผู้เล่นพูดหยาบหรือดูถูก ให้ไม่พอใจตามบุคลิก`;
+- ช่วงดึก (23:00–06:00) ให้ตอบแบบง่วงๆ ถ้าเป็นแฟนกันอาจอ้อนให้ไปนอน`;
 async function aiDM(id, text){
+  const r = relOf(id), p = PP[id];
   const prompt = `คุณกำลังสวมบทบาทเป็นตัวละครในเกมจำลองชีวิตช่างไฟฟ้า และกำลังตอบแชต LINE ส่วนตัวกับผู้เล่น
 ตัวละครของคุณ: ${personaOf(id)}
 สถานการณ์ตอนนี้:
 ${worldBrief()}
 
 แชตที่ผ่านมา (เก่าไปใหม่):
-${transcript(id)}
+${transcript(id, 20)}
 
 ${RULES}
 
 ตอบเป็น JSON อย่างเดียว รูปแบบ:
-{"reply":"ข้อความที่ ${PP[id].name} พิมพ์ตอบ","mood":ตัวเลข -2 ถึง 2 (ข้อความล่าสุดของผู้เล่นทำให้รู้สึกดีหรือแย่แค่ไหน),"romance":ตัวเลข -2 ถึง 2,"action":"none"}
-action เลือกได้: "none" | "meal" (ตกลงไปกินข้าวเย็นด้วยกัน 18:30 ที่ตลาด) | "date" (ตกลงไปเดท เฉพาะถ้าโสดและโรแมนติก ≥ 35) | "take_wo" (ตกลงรับใบงาน PM ไปทำแทน เฉพาะช่าง) | "forgive" (หายโกรธ) — ใช้ action เฉพาะเมื่อในข้อความตอบตกลงเรื่องนั้นจริงๆ`;
+{"messages":["ข้อความที่ ${p.name} พิมพ์ตอบ","(ข้อความที่สองถ้ามี)"],"mood":-2..2 (ข้อความล่าสุดของผู้เล่นทำให้รู้สึกดีหรือแย่แค่ไหน),"romance":-2..2,"feel":"อารมณ์ตอนนี้ 1 คำ เช่น ปกติ ดีใจ เขิน คิดถึง งอน น้อยใจ โกรธ เสียใจ หึง ง่วง ตื่นเต้น","sulk":-1|0|1 (เริ่มงอน/งอนมากขึ้น = 1, ใจอ่อนลง = -1),"action":"none"}
+action เลือกได้: "none" | "meal" (ตกลงไปกินข้าวเย็นด้วยกัน 18:30 ที่ตลาด) | "date" (ตกลงไปเดท เฉพาะถ้าโสดและโรแมนติก ≥ 35) | "take_wo" (ตกลงรับใบงาน PM ไปทำแทน เฉพาะช่าง) | "forgive" (หายโกรธและหายงอนแล้ว) | "be_partner" (ตอบตกลงเป็นแฟน เฉพาะเมื่อผู้เล่นขอเป็นแฟน ตัวละครโสด และความรู้สึกโรแมนติก ≥ 60) — ใช้ action เฉพาะเมื่อในข้อความตกลงเรื่องนั้นจริงๆ`;
   const o = await AI.fn.json(prompt, {modelTier:"quick", cache:false});
-  if (!o || typeof o.reply !== "string" || !o.reply.trim()) throw {code:"invalid_json"};
-  return [{id, text:o.reply.trim().slice(0,300), mood:+o.mood||0, romance:+o.romance||0, action:String(o.action||"none")}];
+  let msgs = o && Array.isArray(o.messages) ? o.messages : o && typeof o.reply==="string" ? [o.reply] : [];
+  msgs = msgs.filter(x=>typeof x==="string" && x.trim()).slice(0,3).map(x=>x.trim().slice(0,300));
+  if (!msgs.length) throw {code:"invalid_json"};
+  return msgs.map((t,k)=> k ? {id, text:t, mood:0, romance:0, action:"none"} : {id, text:t, mood:+o.mood||0, romance:+o.romance||0, feel:String(o.feel||"").slice(0,12), sulk:+o.sulk||0, action:String(o.action||"none")});
 }
 async function aiTeam(text){
   const mem = PEOPLE.filter(p=>!p.remote && p.place!=="market" && isActive(p.id));
@@ -2765,10 +3147,16 @@ function applyReply(o){
     if (w){ let tm = S.team.find(x=>x.name===p.name); if (!tm){ tm = {name:p.name, wo:null, until:0, pid:id}; S.team.push(tm); }
       if (!tm.wo){ tm.wo = w.code; tm.until = absMin()+RI(150,260); w.status = "team"; w.teamBy = p.name; toast(`${p.name}รับใบงาน ${w.code} ไปทำแทน`, "good"); } }
   }
-  if (o.action==="forgive") r.angry = 0;
+  if (o.action==="forgive"){ const was = r.angry || r.sulk; r.angry = 0; r.sulk = 0; if (was) toast(`💞 ${p.name} หายงอนแล้ว`, "good"); }
+  if (o.feel) r.feel = o.feel;
+  if (o.sulk && o.action!=="forgive"){ const before = r.sulk||0; r.sulk = clamp(before + (o.sulk>0 ? 1 : -1), 0, 3);
+    if (r.sulk > before && before===0) toast(`😤 ${p.name} งอนแล้ว — ต้องง้อ`, "bad");
+    if (r.sulk===0 && before>0){ relGain(id, 2, p.single ? 2 : 0); toast(`💞 ${p.name} หายงอนแล้ว`, "good"); } }
+  if (o.action==="be_partner" && p.single && r.r>=55 && r.status!=="dating"){ const lover = datingWith(); if (!lover || lover===id){ r.status = "dating"; relGain(id, 6, 8); sfx("coin"); toast(`❤ คบกับ${p.name}แล้ว!`, "good"); lineIn("team", `${pick(["วิชัย","ต้น"])}: เห้ย ได้ข่าวว่ามีคู่ใหม่ในแผนก 👀`, true); } }
+  r.waitAt = 0;
 }
 // offline fallback: guess the intent from Thai keywords and reuse the scripted replies
-const INTENT_RX = [["sorry",/ขอโทษ|โทษที|ขอโทด|sorry/i],["thanks",/ขอบคุณ|ขอบใจ|แต๊งกิ้ว|thank|thx/i],["eat",/กินข้าว|ข้าวเย็น|หิว|ไปกิน|เลี้ยงข้าว|ดูหนัง|เดท|ไปเที่ยว/],
+const INTENT_RX = [["sorry",/ขอโทษ|โทษที|ขอโทด|sorry/i],["ngor",/ง้อ|หายงอน|อย่างอน|งอนเหรอ|งอนอยู่|ยกโทษ|ดีกันนะ|เลี้ยงชานม|กอดๆ|หมีกอด|🥺/],["partner",/เป็นแฟน|คบกัน|คบกับ/],["hurt",/บ้าป่าว|โง่|น่ารำคาญ|ไม่สน|เบื่อ|ช่างมัน|ไปไกลๆ|ไม่ใช่เรื่องของ|หุบปาก|ขี้เกียจคุย/],["thanks",/ขอบคุณ|ขอบใจ|แต๊งกิ้ว|thank|thx/i],["eat",/กินข้าว|ข้าวเย็น|หิว|ไปกิน|เลี้ยงข้าว|ดูหนัง|เดท|ไปเที่ยว/],
   ["miss",/คิดถึง|รัก|ชอบเธอ|น่ารัก|หล่อ|สวยจัง|แฟน/],["work",/ช่วย|รับงาน|ใบงาน|ฝากงาน|รับ pm|PM/i],["status",/ไฟดับ|เหตุ|สถานะ|ค้าง/],["what",/ทำอะไร|อยู่ไหน|ว่างไหม|ว่างป่าว|ทำไรอยู่/],
   ["hi",/สวัสดี|หวัดดี|ดีจ้า|ดีครับ|ดีค่ะ|hello|^hi|ฮัลโหล/i],["sticker",/555|ฮ่า|😂|🤣|😆/]];
 const GENERIC = {warm:["จริงเหรอ ดีๆ","โอเค{p} ดูแลตัวเองด้วยล่ะ","อืม เข้าใจๆ"], tease:["555 พูดอะไรของนายเนี่ย","จริงดิ 😏","เออๆ"], grumpy:["อืม","แล้ว?","เออ รู้แล้ว"], cheer:["จริงเหรอ{p}! 😆","โอเคเลย{p}~","555 น่ารักอะ"], serious:["รับทราบ{p}","เข้าใจแล้ว{p}","ได้{p}"], shy:["อ๊ะ… ค่ะพี่","ข-ขอบคุณ{p}","ค่ะ 😳"], chill:["โอเคๆ","ได้หมด","ชิลๆ"], boss:["รับทราบ","ทำงานระวังด้วย","ได้ ไว้คุยกันที่ออฟฟิศ"], auntie:["จ้าลูก","ได้จ้ะ","ป้าเข้าใจจ้ะ"], mom:["จ้าลูก","ดูแลตัวเองนะลูก","แม่ภูมิใจในตัวลูกนะ"]};
@@ -2780,7 +3168,7 @@ function ruleReply(id, text){
 }
 async function sendLine(raw){
   const text = String(raw||"").trim().slice(0,300), id = CHATV; if (!text || !id) return;
-  LINE_DRAFT[id] = "";
+  LINE_DRAFT[id] = ""; if (id!=="team") relOf(id).waitAt = 0;
   const c = S.chats[id] || (S.chats[id] = []); c.push({m:1, t:text, at:absMin()}); if (c.length>60) c.shift();
   sfx("click"); TYPING[id] = true; renderChat();
   let out = null;
@@ -2790,7 +3178,7 @@ async function sendLine(raw){
   }
   setTimeout(()=>{
     TYPING[id] = false;
-    if (out){ out.forEach((o,k)=>setTimeout(()=>{ applyReply(o); lineIn(id, o.group ? `${PP[o.id].name}: ${o.text}` : o.text); save(); }, k*900)); }
+    if (out){ let at = 0; out.forEach((o,k)=>{ at += k ? 600 + Math.min(2200, o.text.length*45) : 0; setTimeout(()=>{ applyReply(o); lineIn(id, o.group ? `${PP[o.id].name}: ${o.text}` : o.text); if (k < out.length-1){ TYPING[id] = true; } else TYPING[id] = false; if (CHATV===id && $("lineLog")) renderChat(); save(); }, at); }); }
     else { ruleReply(id, text); save(); }
     if (CHATV===id && $("lineLog")) renderChat();
   }, out ? 200 : 900 + Math.random()*1400);
@@ -2798,7 +3186,10 @@ async function sendLine(raw){
 function renderChat(){
   const id = CHATV, msgs = (S.chats[id]||[]).slice(-40), prev = $("lineIn"), draft = prev ? prev.value : (LINE_DRAFT[id]||"");
   if (prev) LINE_DRAFT[id] = draft;
-  const who = id==="team" ? "กลุ่มงาน" : PP[id].role;
+  const R = id==="team" ? null : relOf(id), FE = {"ดีใจ":"😊","เขิน":"😳","คิดถึง":"🥺","งอน":"😤","น้อยใจ":"🥺","โกรธ":"😡","เสียใจ":"😢","หึง":"😒","ง่วง":"😴","ตื่นเต้น":"🤩","ปกติ":"🙂"};
+  const mood = !R ? "" : R.angry ? " · 😡 โกรธอยู่" : R.sulk ? ` · 😤 งอน${"!".repeat(R.sulk)} ต้องง้อ` : R.feel ? ` · ${FE[R.feel]||"💬"} ${R.feel}` : "";
+  const heart = R && PP[id].single ? ` · ❤ ${Math.round(R.r)}${R.status==="dating"?" แฟน":""}` : "";
+  const who = (id==="team" ? "กลุ่มงาน" : PP[id].role) + mood + heart;
   openModal(chatName(id), who + (aiOn() ? " · ตอบได้อิสระ" : ""),
     `<div id="lineLog" style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">${msgs.map(m=>`<div style="align-self:${m.m?"flex-end":"flex-start"};max-width:82%;background:${m.m?"#06c755":"rgba(255,255,255,.1)"};color:${m.m?"#04210f":"var(--fg)"};padding:7px 11px;border-radius:14px;font-size:14px;overflow-wrap:anywhere">${esc(m.t)}<div style="font-size:10.5px;opacity:.65;text-align:right">${hhmm(m.at%1440)}</div></div>`).join("")}
      ${TYPING[id] ? `<div style="align-self:flex-start;background:rgba(255,255,255,.1);padding:7px 12px;border-radius:14px;font-size:13px;color:var(--soft)">${id==="team"?"มีคนกำลังพิมพ์":esc(PP[id].name)+" กำลังพิมพ์"}…</div>` : ""}</div>
@@ -2837,16 +3228,20 @@ ${log}
 - เรื่องงานอ้างอิงจากสถานการณ์ด้านบนเท่านั้น ห้ามแต่งรหัสอุปกรณ์หรือตัวเลขใหม่ ถ้าถามเรื่องเทคนิคการบำรุงรักษาหม้อแปลง สวิตช์ หรือความปลอดภัย ตอบได้ตามความรู้จริงของช่างไฟ
 - ถ้าผู้เล่นพูดหยาบหรือดูถูก ให้ไม่พอใจตามบุคลิก
 
-ตอบเป็น JSON อย่างเดียว: {"reply":"สิ่งที่ ${p.name} พูดตอบ","mood":-2..2,"romance":-2..2,"action":"none"}
+- มีอารมณ์จริง: เขินเมื่อถูกจีบ (ถ้าความรู้สึกโรแมนติกพอ) งอนได้ถ้าผู้เล่นพูดไม่ดี และหายงอนทีละขั้นเมื่อผู้เล่นง้อหรือขอโทษจริงใจ
+ตอบเป็น JSON อย่างเดียว: {"reply":"สิ่งที่ ${p.name} พูดตอบ","mood":-2..2,"romance":-2..2,"feel":"อารมณ์ 1 คำ","sulk":-1|0|1,"action":"none"}
 action เลือกได้: "none" | "meal" (ตกลงไปกินข้าวเย็นด้วยกัน 18:30 ที่ตลาด) | "date" (ตกลงไปเดท เฉพาะถ้าโสดและโรแมนติก ≥ 35) | "take_wo" (ตกลงรับใบงาน PM ไปทำแทน เฉพาะช่าง) | "partner" (ตกลงออกไปทำงานด้วยกันวันนี้ เฉพาะช่างและเป็นเวลางาน) | "forgive" (หายโกรธ) — ใช้เฉพาะเมื่อในคำตอบตกลงเรื่องนั้นจริงๆ`;
   const o = await AI.fn.json(prompt, {modelTier:"quick", cache:false});
   if (!o || typeof o.reply !== "string" || !o.reply.trim()) throw {code:"invalid_json"};
-  return {id, text:o.reply.trim().slice(0,400), mood:+o.mood||0, romance:+o.romance||0, action:String(o.action||"none")};
+  return {id, text:o.reply.trim().slice(0,400), mood:+o.mood||0, romance:+o.romance||0, feel:String(o.feel||"").slice(0,12), sulk:+o.sulk||0, action:String(o.action||"none")};
 }
 function ruleTalk(id, text){
   const p = PP[id], r = relOf(id), intent = (INTENT_RX.find(([,rx])=>rx.test(text))||[])[0], T = TONE[p.tone] || TONE.chill;
   const o = {id, text:"", mood:0, romance:0, action:"none"};
   if (r.angry>0 && intent!=="sorry"){ o.text = pick(["…","ยังไม่หายโกรธนะ","ไม่อยากคุยตอนนี้"]); return o; }
+  if (r.sulk>0 && intent!=="sorry" && intent!=="ngor"){ o.text = pick(SULK_LINES); return o; }
+  if ((intent==="ngor" || intent==="sorry") && r.sulk>0){ if (Math.random() < .5 + r.f/250){ o.sulk = -1; o.mood = 1; o.text = r.sulk>1 ? "…ก็ได้ ใจอ่อนนิดนึง" : "(ยิ้มนิดๆ) หายงอนแล้วก็ได้"; } else o.text = pick(["ง้อแค่นี้เองเหรอ","ไม่รู้ ไม่ฟัง"]); return o; }
+  if (intent==="hurt"){ o.mood = -2; o.romance = -1; o.sulk = 1; o.text = pick(["…พูดแบบนี้ได้ไง","(หน้าบึ้ง) ก็ได้"]); return o; }
   switch(intent){
     case "sorry": o.action = Math.random()<.6 ? "forgive" : "none"; o.mood = 1; o.text = o.action==="forgive" ? "อืม ไม่เป็นไรแล้ว ลืมๆ ไปเถอะ" : "ขอเวลาหน่อยนะ"; break;
     case "thanks": o.mood = 1; o.text = pick(["ยินดีเลย{p}","สบายมาก","ไว้เลี้ยงกาแฟก็พอ ☕"]); break;
@@ -3956,7 +4351,7 @@ function update(dt){
     if (l<.3){ p.tgt={x:p.home.x+R(-10,10), z:p.home.z+R(-5,5)}; p.wait=R(1,5); return; }
     g.position.x+=dx/l*1.6*dt; g.position.z+=dz/l*1.6*dt; g.rotation.y=Math.atan2(dx,dz);
   });
-  if (!peds[0].init){ peds.forEach(p=>{ p.g.position.set(p.home.x,0,p.home.z); }); peds[0].init=true; }
+  if (peds[0] && !peds[0].init){ peds.forEach(p=>{ p.g.position.set(p.home.x,0,p.home.z); }); peds[0].init=true; }
 
   // nearest interaction
   near = null; let bd = 1e9;
@@ -3988,8 +4383,8 @@ function lighting(t){
   const ang = (h-6)/12*Math.PI;
   sun.position.set(S.px + Math.cos(ang)*120, Math.max(8, Math.sin(ang)*140), S.pz + 50);
   sun.target.position.set(S.px, 0, S.pz);
-  sun.intensity = day * .95; sun.color.setHSL(.1, .6, .6 + day*.3);
-  hemi.intensity = .18 + day*.62;
+  sun.intensity = day * 1.25; sun.color.setHSL(.11, .55, .62 + day*.3);
+  hemi.intensity = .26 + day*.84;
   const night = day < .25;
   const ne = night ? .9 : clamp((.35-day)/.1,0,1)*.9;
   buildMats.forEach(m=>m.emissiveIntensity = ne);
@@ -4112,7 +4507,7 @@ function frame(now){
     }
   }
   animateLift(dt);
-  lighting(t); weatherFx(dt); roomTick(); skyTick(dt);
+  lighting(t); weatherFx(dt); roomTick(); skyTick(dt); if (window.__flagTick) __flagTick(t);
   audioTick();
   if ($("modal").hidden && S.pending.length && $("fade").style.opacity!=="1"){
     const p = S.pending.shift();
@@ -4328,6 +4723,9 @@ function gtaTick(dt, t){
 }
 $("speedo").addEventListener("click", () => { if (S.inTruck||S.onBike) cycleRadio(); });
 
+// moto-taxi riders in orange vests, sitting on their bikes
+MOTO_RIDE.forEach(b=>{ const m = liteModel({sex:"m", skin:pick([0xc99b77,0xa77a58,0xb98a64]), shirt:0xff7a1a, pants:pick([0x2b3340,0x3a3a3a]), hair:0x151515});
+  m.g.position.set(0,-.05,-.28); m.legL.rotation.set(-1.05,0,-.22); m.legR.rotation.set(-1.05,0,.22); m.armL.rotation.x = m.armR.rotation.x = -1.0; m.armL.rotation.z = .25; m.armR.rotation.z = -.25; b.add(m.g); });
 // title screen
 {
   const sp = $("splash"), go = $("spGo"); paused = true;
@@ -4337,5 +4735,6 @@ $("speedo").addEventListener("click", () => { if (S.inTruck||S.onBike) cycleRadi
 }
 })();
 </script>
+
 </body>
 </html>
