@@ -1503,7 +1503,7 @@ const SPECIAL_SEAT = {boss:[14,-12.1,0,true], namfon:[-13.5,-9.3,0,false], ann:[
   logo.position.set(1,2.3,-5.9); scene.add(logo);
   fbox(5,3.2,.16,wm,1,1.6,-6.05); solid(1,-6.05,5,.3);
   [[-1.5,6.2],[7.2,6.2],[-18.2,-7.2],[7.2,-14.2]].forEach(([x,z])=>{ cyl(.25,.18,.45,0x9c5a3c,x,.22,z,scene,10); const p = new THREE.Mesh(sph(.5,8,6), mat(0x4f8a3a)); p.position.set(x,.85,z); scene.add(p); });
-  [["ลงเวลา",4.2,6.2],["บอร์ดใบงาน",-5.5,6.2],["คลังพัสดุ",-13.5,-7.4],["หัวหน้างาน",14,-9.6],["ห้องฝึกอบรม",12,4.6],["มุมกาแฟ",-3,-13.4],["โต๊ะของคุณ",-5,3.4]].forEach(([t,x,z])=>{ const s = label(t,{size:28,scale:.3,raw:true}); s.position.set(x,2.5,z); scene.add(s); });
+  [["ลงเวลา",4.2,6.2],["บอร์ดใบงาน",-5.5,6.2],["คลังพัสดุ",-13.5,-7.4],["หัวหน้างาน",14,-9.6],["ห้องฝึกอบรม",12,4.6],["มุมกาแฟ",-3,-13.4],["โต๊ะของคุณ",-5,3.4]].forEach(([t,x,z])=>{ const s = label(t,{size:28,scale:.22,raw:true}); s.position.set(x,2.4,z); scene.add(s); });
   OFFICE_ROOM = r;
 }
 function openBed(){
@@ -1529,9 +1529,7 @@ function roomTick(){
   if (!INSIDE) return;
   const R = INSIDE, cx = camera.position.x, cz = camera.position.z, vx = S.px-cx, vz = S.pz-cz, L2 = vx*vx+vz*vz || 1, L = Math.sqrt(L2);
   for (const w of R.walls){
-    let low = false;
-    if (w.side==="+z") low = cz > w.cz; else if (w.side==="-z") low = cz < w.cz; else if (w.side==="+x") low = cx > w.cx; else if (w.side==="-x") low = cx < w.cx;
-    if (!low){ const t = ((w.cx-cx)*vx + (w.cz-cz)*vz)/L2, d = Math.abs((w.cx-cx)*vz - (w.cz-cz)*vx)/L; low = t>0 && t<1.02 && d < w.len/2 + .8; }
+    const low = true;   // indoors: every wall of the room is cut to knee height so the whole room is visible
     if (low !== w.low){ w.low = low; const k = low ? .1 : 1; w.m.scale.y = k; w.m.position.y = w.h*k/2; w.cap.position.y = w.h*k; }
   }
   R.lamp.intensity = hemi.intensity < .45 ? 1.25 : .35;
@@ -2008,9 +2006,9 @@ function onHourBase(hAbs){
   }
   if (hr===8 && dt.getDate()===1 && !S.rentPaid[d] && !S.ownHouse){
     S.rentPaid[d] = true;
-    S.money -= 3500; S.log.unshift({t:absMin(), n:-3500, why:"ค่าเช่าห้องรายเดือน"});
+    const rent = S.married ? 1750 : 3500; S.money -= rent; S.log.unshift({t:absMin(), n:-rent, why:S.married?"ค่าเช่าห้อง (หารกับคู่ชีวิต)":"ค่าเช่าห้องรายเดือน"});
     S.money -= 640;  S.log.unshift({t:absMin(), n:-640, why:"ค่าน้ำ ค่าไฟ ค่าอินเทอร์เน็ต"});
-    toast("หักค่าเช่าห้องและค่าน้ำค่าไฟ ฿4,140", "bad");
+    toast(`หักค่าเช่าห้องและค่าน้ำค่าไฟ ${fmtB(rent+640)}`, "bad");
     if (S.money<0){ S.stress = clamp(S.stress+20,0,100); toast("เงินติดลบ! ค้างจ่ายค่าเช่า เครียดหนัก", "bad"); }
   }
   if (hr===17 && !S.paid[d] && !isWeekend(d)){
@@ -2027,7 +2025,7 @@ function onHourBase(hAbs){
   }
   // weather: end of the rainy season, sudden storms
   if (S.rain>0){ S.rain--; S.rainH++; if (!S.rain){ S.rainH=0; if (!sleeping) toast("ฝนหยุดแล้ว น้ำเริ่มลด"); } }
-  else if (Math.random()<.07){ S.rain = RI(2,5); S.rainH = 0; if (!sleeping) toast("🌧 ฝนตกหนัก — ระวังถนนลื่นและไฟดับบ่อยขึ้น", "bad"); }
+  else if (Math.random()<(S.monsoon?.22:.07)){ S.rain = RI(2,5); S.rainH = 0; if (!sleeping) toast("🌧 ฝนตกหนัก — ระวังถนนลื่นและไฟดับบ่อยขึ้น", "bad"); }
   // customers calling about outages
   S.fails.filter(f=>!f.end).forEach(f=>{
     if (hr>=6 && hr<=23 && Math.random()<(f.ack?.25:.55)){
@@ -2038,7 +2036,7 @@ function onHourBase(hAbs){
   socialHour(hr, d);
   if (hr>=7 && hr<=21){
     const actives = S.fails.filter(f=>!f.end).length;
-    if (actives<3 && Math.random() < (S.rain>0 ? .26 : .1)) triggerFailure();
+    if (actives<(S.monsoon?4:3) && Math.random() < (S.rain>0 ? .26 : .1)*(S.monsoon?1.5:1)) triggerFailure();
   }
   save();
 }
@@ -2751,7 +2749,7 @@ const strHash = s => { let h = 7; for (let i=0;i<s.length;i++) h = (h*31 + s.cha
 const OFFICE_SPOTS = [[-14,18],[-8,22],[-2,19],[4,23],[10,18],[16,21],[-12,27],[6,28],[20,27],[0,30]];
 const NPCS = PEOPLE.filter(p=>!p.remote).map((p,i) => {
   const m = personModel(Object.assign({sex:p.sex, belly:p.sex==="m" && p.age>=50, build:({kitti:1.13, bank:1.1, pong:1.16, wichai:1.06, jom:.97, boss:1.02})[p.id]}, p.look, STYLE[p.id]||{})); scene.add(m.g);
-  const lab = label(p.name,{size:26,scale:.3,raw:true}); lab.position.y = 2.62; m.g.add(lab); m.lab = lab;
+  const lab = label(p.name,{size:26,scale:.2,raw:true}); lab.position.y = 2.42; m.g.add(lab); m.lab = lab;
   m.g.visible = false;
   return {p, m, i, x:0, z:0, vis:false, walk:0, bub:null, bubT:0, face:0};
 });
@@ -2781,13 +2779,13 @@ function npcPlan(n){
 }
 function setBubble(n, text, secs=4){
   if (n.bub){ n.m.g.remove(n.bub); n.bub.material.map.dispose(); }
-  n.bub = label(text, {size:24, scale:.34, raw:true, bg:"rgba(250,250,247,.95)", color:"#1b2430"}); n.bub.position.y = 3.05; n.m.g.add(n.bub); n.bubT = secs;
+  n.bub = label(text, {size:24, scale:.23, raw:true, bg:"rgba(250,250,247,.95)", color:"#1b2430"}); n.bub.position.y = 2.75; n.m.g.add(n.bub); n.bubT = secs;
 }
 function updateNPCs(dt){
   for (const n of NPCS){
     const plan = npcPlan(n), g = n.m.g;
     if (n.bubT>0){ n.bubT -= dt; if (n.bubT<=0 && n.bub){ g.remove(n.bub); n.bub = null; } }
-    if (n.m.lab){ const dn = Math.hypot(n.x-S.px, n.z-S.pz); n.m.lab.visible = !n.bub && dn < (INSIDE ? 7 : 13); }
+    if (n.m.lab){ const dn = Math.hypot(n.x-S.px, n.z-S.pz); n.m.lab.visible = !n.bub && dn < (INSIDE ? 6 : 11); }
     if (!plan){ g.visible = false; n.vis = false; continue; }
     let tx, tz;
     if (plan.follow){
@@ -3448,11 +3446,11 @@ function openPhone(){
   const app = (act, ic, name, badge) => `<button data-act="${act}" style="display:grid;justify-items:center;gap:6px;background:none;border:0;color:var(--fg);cursor:pointer;font:inherit;padding:6px"><span style="width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:26px;background:${ic[1]};position:relative">${ic[0]}${badge?`<span style="position:absolute;top:-4px;right:-4px;background:var(--bad);color:#fff;border-radius:10px;font-size:11px;padding:0 6px;font-weight:700">${badge}</span>`:""}</span><span style="font-size:12.5px">${name}</span></button>`;
   openModal("มือถือ", `${hhmm(minOfDay())} · ${fmtDay(today())}`,
     `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px">
-      ${app("app-line",["💬","#06c755"],"LINE",u)}${app("app-call",["📞","#2f9e44"],"โทรศัพท์")}${app("app-cmms",["🛠","#ff8a1e"],"CMMS")}${app("app-people",["👥","#5a7fd6"],"คนรู้จัก")}${app("app-cal",["📅","#c0496a"],"นัดหมาย",ap.length)}${app("app-goals",["🏆","#d6a42f"],"เป้าหมาย")}${app("app-save",["💾","#3a8f8f"],"เซฟเกม")}${app("app-gfx",["🎨","#7b5cd6"],"กราฟิก")}${app("app-set",["⚙","#56606a"],"ตั้งค่า")}
+      ${app("app-line",["💬","#06c755"],"LINE",u)}${app("app-call",["📞","#2f9e44"],"โทรศัพท์")}${app("app-cmms",["🛠","#ff8a1e"],"CMMS")}${app("app-people",["👥","#5a7fd6"],"คนรู้จัก")}${app("app-cal",["📅","#c0496a"],"นัดหมาย",ap.length)}${app("app-goals",["🏆","#d6a42f"],"เป้าหมาย")}${app("app-save",["💾","#3a8f8f"],"เซฟเกม")}${app("app-gfx",["🎨","#7b5cd6"],"กราฟิก")}${app("app-bank",["🏦","#1f6f5c"],"ธนาคาร")}${app("app-trip",["🏖","#1e88b8"],"เที่ยว")}${app("app-plan",["📋","#8a5a2b"],"แผนทีม")}${app("app-stats",["📊","#3b5bdb"],"สถิติ")}${app("app-set",["⚙","#56606a"],"ตั้งค่า")}
      </div>${ap.length?`<p style="margin-top:12px">นัดถัดไป: ${ap.map(a=>`${a.kind==="date"?"เดท":a.kind==="party"?"งานเลี้ยงเกษียณ":"กินข้าว"}กับ${PP[a.id].name} ${fmtDay(dayOf(a.at))} ${hhmm(a.at%1440)} ที่ตลาด`).join(" · ")}</p>`:""}`,
     [{label:"ปิด", cls:"primary", fn:closeModal}]);
 }
-bodyActs["app-line"] = openLine; bodyActs["app-goals"] = () => openGoals(); bodyActs["app-save"] = () => openSaves(); bodyActs["app-gfx"] = () => openGfx(); bodyActs["app-call"] = openCalls; bodyActs["app-cmms"] = () => openCMMS();
+bodyActs["app-line"] = openLine; bodyActs["app-goals"] = () => openGoals(); bodyActs["app-save"] = () => openSaves(); bodyActs["app-gfx"] = () => openGfx(); bodyActs["app-bank"] = () => openBank(); bodyActs["app-trip"] = () => openTrip(); bodyActs["app-plan"] = () => openPlan(); bodyActs["app-stats"] = () => openStats(); bodyActs["app-call"] = openCalls; bodyActs["app-cmms"] = () => openCMMS();
 bodyActs["app-people"] = () => {
   openModal("คนรู้จัก", "ความสัมพันธ์กับเพื่อนร่วมงาน", `<div class="rows">${PEOPLE.filter(p=>p.id!=="mom"&&p.id!=="tana"&&isActive(p.id)).map(p=>{ const r = relOf(p.id); return `<div class="row"><div style="min-width:0"><div class="n">${esc(p.name)}${r.status==="dating"?" ❤ แฟน":""}${r.angry?' <span class="tag late">โกรธ</span>':""}</div><div class="s">${esc(p.role)} · ชอบคุยเรื่อง ${p.likes.join(", ")}${p.single?"":" · มีครอบครัวแล้ว"}</div></div><div style="text-align:right;font-size:12.5px;white-space:nowrap"><div class="${r.f>=40?"ok":r.f>=0?"":"bad"}">มิตรภาพ ${Math.round(r.f)}</div>${p.single?`<div style="color:#ff8fc0">หัวใจ ${Math.round(r.r)}</div>`:""}</div></div>`; }).join("")}</div>`, [{label:"กลับหน้าหลักมือถือ", fn:openPhone}]);
 };
@@ -4018,7 +4016,7 @@ function storyHour(hAbs){
   if (st.hireQ && st.hireQ.length && wd && hr===8 && d>=st.hireQ[0]){ st.hireQ.shift(); hireNew(); }
   if (st.chanDone && hr===19 && Math.random()<.04) lineIn("chan", pick(["วันนี้ไปตกปลาที่บางปูมา ได้ปลากะพงตัวเบ้อเริ่ม 🎣","เป็นไงบ้าง งานหนักไหม อย่าลืมต่อสายดินนะ","หลานลุงเพิ่งเข้า ป.1 วันนี้ 😊"]));
 }
-function onHour(hAbs){ onHourBase(hAbs); storyHour(hAbs); if (V6READY) v6Hour(hAbs); }
+function onHour(hAbs){ onHourBase(hAbs); storyHour(hAbs); if (V6READY) v6Hour(hAbs); if (V7READY) v7Hour(hAbs); }
 function advance(mins, effort=0){ advanceBase(mins, effort); contractTick(); }
 
 /* ---- talk options for the stories ---- */
@@ -4390,10 +4388,11 @@ function update(dt){
   // camera
   const GTA = S.camMode==="gta", foot = !S.inTruck && !S.onBike;
   const tx = S.px, tz = S.pz, ty = S.inTruck?2.4:(GTA && foot ? 1.55 : 1.6), dist = S.inTruck?Math.max(camDist,GTA?11:14):S.onBike?Math.max(camDist,GTA?5.5:7):camDist;
-  const inR = INSIDE && !S.inTruck && !GTA, cp = inR ? clamp(camPitch + .75, 1.02, 1.3) : camPitch, ux = Math.sin(camYaw)*Math.cos(cp), uz = Math.cos(camYaw)*Math.cos(cp);
-  let cd = inR ? clamp(dist + 3.5, 10, 15) : dist; if (!inR) cd = camClip(tx, tz, ux, uz, cd, ty + Math.sin(cp)*cd, GTA && INSIDE ? .9 : 1.4);
+  const inR = INSIDE && !S.inTruck, cp = inR ? clamp(camPitch + .9, 1.05, 1.3) : camPitch, ux = Math.sin(camYaw)*Math.cos(cp), uz = Math.cos(camYaw)*Math.cos(cp);
+  let cd = inR ? clamp(dist + 10, 14, 20) : dist; if (!inR) cd = camClip(tx, tz, ux, uz, cd, ty + Math.sin(cp)*cd, GTA && INSIDE ? .9 : 1.4);
   const shd = (!inR && foot) ? (GTA ? .42 : .55) : 0, rxv = Math.cos(camYaw), rzv = -Math.sin(camYaw);
-  const cx = tx + ux*cd + rxv*shd, cy = ty + Math.sin(cp)*cd, cz = tz + uz*cd + rzv*shd, ly = ty + (inR ? -.6 : GTA && foot ? .05 : .2);
+  const cx = tx + ux*cd + rxv*shd, cy = ty + Math.sin(cp)*cd, cz = tz + uz*cd + rzv*shd, ly = ty + (inR ? -1.2 : GTA && foot ? .05 : .2);
+  const wantF = inR ? 62 : GTA ? 66 : 58; if (Math.abs(camera.fov - wantF) > .05){ camera.fov += (wantF - camera.fov)*Math.min(1, dt*6); camera.updateProjectionMatrix(); }
   if (!window.__cam || Math.hypot(cx-__cam.x, cz-__cam.z) > 40) window.__cam = {x:cx, y:cy, z:cz, ly};
   const kf = 1 - Math.exp(-dt*(S.inTruck || S.onBike ? 14 : 9)); __cam.x += (cx-__cam.x)*kf; __cam.y += (cy-__cam.y)*kf; __cam.z += (cz-__cam.z)*kf; __cam.ly += (ly-__cam.ly)*kf;
   camera.position.set(__cam.x, __cam.y, __cam.z);
@@ -4416,7 +4415,7 @@ function update(dt){
 
   // nearest interaction
   near = null; let bd = 1e9;
-  for (const p of INTER){ const d = Math.hypot(p.x-S.px, p.z-S.pz); if (d<p.r && d<bd){ bd=d; near=p; } }
+  for (const p of INTER){ if (p.hide && p.hide()) continue; const d = Math.hypot(p.x-S.px, p.z-S.pz); if (d<p.r && d<bd){ bd=d; near=p; } }
   if (!S.inTruck && !S.onBike) for (const n of NPCS){ if (!n.vis) continue; const d = Math.hypot(n.x-S.px, n.z-S.pz); if (d<2.8 && d<bd+1.5){ bd=d; const id=n.p.id; near = {x:n.x, z:n.z, label:()=> (S.argue && (S.argue.a===id||S.argue.b===id)) ? `ห้าม${PP[id].name}ที่กำลังเถียงกัน` : `คุยกับ${PP[id].name}${relOf(id).status==="dating"?" ❤":""}`, act:()=>openTalk(id)}; } }
   if (!S.inTruck && !S.onBike) for (const pd of PEDS){ if (!pd.vis) continue; const d = Math.hypot(pd.x-S.px, pd.z-S.pz); if (d<2.4 && d<bd+1.5){ bd = d; const id = pd.prof.id; near = {x:pd.x, z:pd.z, label:()=>`คุยกับ${PP[id].name} (${PP[id].role})`, act:()=>openTalk(id)}; } }
   const pr = $("prompt"), veh = S.inTruck||S.onBike;
@@ -4578,7 +4577,7 @@ function frame(now){
     else if (p.type==="conflict"){ const c = CONFLICTS.find(x=>x.k===p.k); if (c){ const n = NPC[p.id]; if (n && n.vis){ n.x = S.px + 1.5; n.z = S.pz + 1.5; } startConflict(c, p.id); } }
   }
   hudT -= dt; if (hudT<=0){ hud(); hudT = .25; }
-  gtaTick(dt, t); if (V6READY) v6Tick(dt, t);
+  gtaTick(dt, t); if (V6READY) v6Tick(dt, t); if (V7READY) v7Tick(dt);
   renderer.render(scene, camera);
   requestAnimationFrame(frame);
 }
@@ -4906,7 +4905,7 @@ function openGoals(){
   const row = G => { const [a,b] = G.p(), ok = S.goals[G.id] || a>=b, pc = Math.round(Math.min(1, a/b)*100);
     let act = "";
     if (!ok && G.buy){ const can = G.id!=="marry" || (lover() && relOf(lover().id).r >= 85);
-      act = `<button class="btn sm ${can && S.money>=G.buy?"primary":""}" data-act="goalbuy" data-arg="${G.id}">${G.id==="marry"?"ซื้อแหวน · ขอแต่งงาน":"ซื้อ"} ${fmtB(G.buy)}</button>`; }
+      act = `<button class="btn sm ${can && S.money>=G.buy?"primary":""}" data-act="goalbuy" data-arg="${G.id}">${G.id==="marry"?"ซื้อแหวน · ขอแต่งงาน":"ซื้อ"} ${fmtB(G.buy)}</button>${G.id==="car"?`<button class="btn sm" data-act="carloan">ผ่อน · ดาวน์ ฿10,000</button>`:""}`; }
     return `<div class="row"><div style="min-width:0;flex:1"><div class="n">${ok?"✅":"⬜"} ${esc(G.n)}</div><div style="height:6px;background:rgba(255,255,255,.1);border-radius:3px;margin-top:6px;overflow:hidden"><i style="display:block;height:100%;width:${ok?100:pc}%;background:${ok?"#5fcf4a":"#ff8a1e"}"></i></div><div class="s">${G.buy?"":`${Math.min(a,b)}/${b}`}${G.pay?` · รางวัล ${fmtB(G.pay)}`:""}</div></div>${act}</div>`; };
   const tut = S.tut && !S.tut.done ? `<p>📘 กำลังสอนงานวันแรก: ขั้นที่ ${S.tut.i+1}/${TUT.length} <button class="btn sm" data-act="tutskip">ข้ามการสอน</button></p>` : "";
   openModal("เป้าหมายชีวิต", `สำเร็จแล้ว ${done}/${GOALS.length}`, `${tut}<div class="rows">${GOALS.map(row).join("")}</div>`, [{label:"กลับ", cls:"primary", fn:openPhone}]);
@@ -4919,7 +4918,7 @@ bodyActs.goalbuy = id => {
   S.goals[id] = true;
   if (id==="car"){ S.car = true; buildMyCar(); banner("ได้รถใหม่!", "รถเก๋งของคุณจอดแทนมอเตอร์ไซค์ที่หน้าบ้าน · เร็วขึ้น ไม่เปียกฝน", "gold"); }
   if (id==="house"){ S.ownHouse = true; banner("เป็นเจ้าของบ้านแล้ว!", "ไม่ต้องจ่ายค่าเช่ารายเดือนอีกต่อไป", "gold"); S.stress = clamp(S.stress-15,0,100); }
-  if (id==="marry"){ const L = lover(); S.married = L.id; relGain(L.id, 10, 10);
+  if (id==="marry"){ const L = lover(); S.married = L.id; S.wedDay = today(); relGain(L.id, 10, 10);
     lineIn(L.id, pick(["…ตกลง 💍🥹 รักนะ","ยอมแต่งด้วยก็ได้ 💍 ห้ามเปลี่ยนใจนะ!"]));
     PEOPLE.forEach(p=>{ if (isActive(p.id) && p.id!==L.id && !p.remote) relGain(p.id, 4); });
     lineIn("team", `หัวหน้าประเสริฐ: ยินดีด้วยกับ${meName()}และ${L.name}ครับ 🎉 ทีมรวมซองให้แล้ว`, true);
@@ -5067,7 +5066,7 @@ function custObj(c){
   if (CUST_OBJ[c.id]) return;
   const m = liteModel({sex:Math.random()<.5?"m":"f", skin:pick([0xc99b77,0xb98a64,0xd9ae8a]), shirt:pick([0x5d8aa8,0xd96c6c,0xe0c35a,0x7aa86a,0xf0f0f0]), pants:pick([0x34495e,0x5a4636,0x2b2b2b]), hair:0x1a1a1a});
   m.g.position.set(c.x, 0, c.z); m.g.rotation.y = c.face; m.armR.rotation.x = -2.6; scene.add(m.g);
-  const s = label(CTYPE[c.type].ic + " " + c.name, {size:26, scale:.36, raw:true, bg:"rgba(255,196,40,.95)", color:"#1b1b1b"}); s.position.set(c.x, 2.85, c.z); scene.add(s);
+  const s = label(CTYPE[c.type].ic + " " + c.name, {size:26, scale:.25, raw:true, bg:"rgba(255,196,40,.95)", color:"#1b1b1b"}); s.position.set(c.x, 2.85, c.z); scene.add(s);
   const it = {x:c.x, z:c.z, r:2.6, cust:c.id, label:()=>`${c.name} — ${CTYPE[c.type].n}`, act:()=>openCust(c)};
   INTER.push(it); CUST_OBJ[c.id] = {m, s, it};
   RADAR_EXTRA.push({k:"c"+c.id, x:c.x, z:c.z, c:"#ffc428"});
@@ -5238,6 +5237,246 @@ function ambTick(){
 applyGfx();
 
 V6READY = true;
+var V7READY = false;
+/* ================= v7: bank & loans & insurance, married life, night market, temple fair, trips,
+   team planning, personal stats, monsoon mode ================= */
+if (S.bank == null) S.bank = 0;
+if (!S.loans) S.loans = [];
+if (S.married && S.wedDay == null) S.wedDay = today();
+const WK = d => Math.floor((d+3)/7);   // week number (weeks start Monday)
+
+/* ---------- bank ---------- */
+function openBank(){
+  const debt = S.loans.reduce((a,l)=>a+l.left*l.amt,0);
+  const rows = S.log.slice(0,8).map(l=>`<div class="row"><div><div class="n">${esc(l.why)}</div><div class="s">${fmtDay(dayOf(l.t))} ${hhmm(l.t%1440)}</div></div><b class="${l.n>=0?"ok":"bad"}">${l.n>=0?"+":""}${fmtB(l.n)}</b></div>`).join("");
+  openModal("ธนาคาร", "บัญชีออมทรัพย์ ดอกเบี้ย 1.5% ต่อปี (จ่ายทุกวันที่ 1)",
+    `<div class="kpis" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px">
+      <div class="kpi"><div class="l">เงินสด</div><div class="v">${fmtB(S.money)}</div></div>
+      <div class="kpi"><div class="l">เงินฝาก</div><div class="v ok">${fmtB(S.bank)}</div></div>
+      <div class="kpi"><div class="l">หนี้คงเหลือ</div><div class="v ${debt?"bad":""}">${fmtB(debt)}</div></div></div>
+     <p style="margin-top:12px"><b>ฝาก / ถอน</b></p>
+     <div style="display:flex;gap:6px;flex-wrap:wrap">${[1000,5000].map(n=>`<button class="btn sm" data-act="bk" data-arg="d${n}">ฝาก ${fmtB(n)}</button>`).join("")}<button class="btn sm" data-act="bk" data-arg="dall">ฝากทั้งหมด</button>${[1000,5000].map(n=>`<button class="btn sm" data-act="bk" data-arg="w${n}">ถอน ${fmtB(n)}</button>`).join("")}<button class="btn sm" data-act="bk" data-arg="wall">ถอนทั้งหมด</button></div>
+     <p style="margin-top:12px"><b>ประกันสุขภาพ</b> · เดือนละ ฿450 · ถ้าเกิดอุบัติเหตุจ่ายค่ารักษาแค่ ฿300 (ไม่มีประกัน ฿3,500)</p>
+     <button class="btn sm ${S.insure?"primary":""}" data-act="bk" data-arg="ins">${S.insure?"✓ มีประกันอยู่ (กดเพื่อยกเลิก)":"สมัครประกัน"}</button>
+     ${S.loans.length?`<p style="margin-top:12px"><b>สินเชื่อ</b></p><div class="rows">${S.loans.map(l=>`<div class="row"><div><div class="n">${esc(l.n)}</div><div class="s">งวดละ ${fmtB(l.amt)} · เหลือ ${l.left} งวด (หักทุกวันที่ 1)</div></div><button class="btn sm" data-act="bk" data-arg="pay${S.loans.indexOf(l)}">ปิดหนี้ ${fmtB(l.left*l.amt)}</button></div>`).join("")}</div>`:""}
+     <p style="margin-top:12px"><b>รายการล่าสุด</b></p><div class="rows">${rows}</div>`,
+    [{label:"กลับ", cls:"primary", fn:openPhone}]);
+}
+bodyActs.bk = a => {
+  const n = a.slice(1);
+  if (a[0]==="d"){ const v = n==="all" ? Math.max(0,S.money) : +n; if (S.money < v || v<=0) return toast("เงินสดไม่พอ", "bad"); S.money -= v; S.bank += v; toast(`ฝาก ${fmtB(v)}`, "good"); }
+  else if (a[0]==="w"){ const v = n==="all" ? S.bank : +n; if (S.bank < v || v<=0) return toast("เงินฝากไม่พอ", "bad"); S.bank -= v; S.money += v; toast(`ถอน ${fmtB(v)}`, "good"); }
+  else if (a==="ins"){ S.insure = !S.insure; toast(S.insure ? "สมัครประกันสุขภาพแล้ว" : "ยกเลิกประกันแล้ว"); }
+  else if (a.startsWith("pay")){ const l = S.loans[+a.slice(3)]; if (!l) return; if (!spend(l.left*l.amt, `ปิดหนี้ ${l.n}`)) return; S.loans.splice(S.loans.indexOf(l),1); toast("ปิดหนี้แล้ว 🎉", "good"); }
+  save(); openBank();
+};
+bodyActs.carloan = () => {
+  if (S.car) return; if (!spend(10000, "เงินดาวน์รถเก๋ง")) return;
+  S.loans.push({n:"สินเชื่อรถเก๋ง", amt:2300, left:18}); S.car = true; S.goals.car = true; buildMyCar();
+  banner("ได้รถใหม่!", "ดาวน์ ฿10,000 ผ่อนเดือนละ ฿2,300 × 18 งวด", "gold"); save(); openGoals();
+};
+var accidentV6 = accident;
+accident = function(title, sub, en){ accidentV6(title, sub, en); const bill = S.insure ? 300 : 3500; S.money -= bill; S.log.unshift({t:absMin(), n:-bill, why:S.insure?"ค่ารักษา (มีประกัน)":"ค่ารักษาพยาบาล"}); setTimeout(()=>toast(`ค่ารักษาพยาบาล ${fmtB(bill)}${S.insure?" (ประกันจ่ายส่วนใหญ่)":""}`, "bad"), 1200); };
+
+/* ---------- married life ---------- */
+var npcPlanV6 = npcPlan;
+npcPlan = function(n){
+  const id = n.p.id;
+  if (S.married===id && isActive(id)){
+    const md = minOfDay(), wd = !isWeekend(today());
+    if (md>=18*60+40 && md<20*60) return {x:HOME.x+3.9, z:HOME.z+.6, face:Math.PI/2};
+    if (md>=20*60 && md<23*60) return {x:HOME.x-4.2, z:HOME.z+2.3, face:0, sit:true};
+    if (!wd && md>=8*60 && md<12*60) return {x:HOME.x-4.2, z:HOME.z+2.3, face:0, sit:true};
+    if (md>=23*60 || md<6*60+30) return null;
+  }
+  return npcPlanV6(n);
+};
+function spouseHour(hr, d){
+  if (!S.married || !isActive(S.married)) return;
+  const p = PP[S.married], home = roomAt(S.px, S.pz)===HOME_ROOM;
+  if (hr===17 && !isWeekend(d)) lineIn(p.id, pick(["เลิกงานแล้วกลับบ้านเลยนะ ทำต้มยำรอ 🍲","เย็นนี้ทำกะเพราไข่ดาวให้ รีบกลับมานะ","ขับรถดีๆ นะ วันนี้มีแกงเขียวหวาน"]));
+  if (hr===19){ if (home){ S.hunger = clamp(S.hunger+45,0,100); S.stress = clamp(S.stress-8,0,100); relGain(p.id,2,2); toast(`🍲 กินข้าวเย็นที่${p.name}ทำ อิ่มและหายเหนื่อย`, "good"); }
+    else { relGain(p.id,0,-1); lineIn(p.id, pick(["ข้าวเย็นจะเย็นหมดแล้วนะ…","ยังไม่กลับอีกเหรอ 🥺"])); } }
+  const wd = S.wedDay != null ? dateOf(S.wedDay).getDate() : 0;
+  if (wd && dateOf(d).getDate()===wd && d!==S.wedDay){
+    if (hr===8) lineIn(p.id, "วันนี้วันอะไรรู้ไหม 😊 ครบรอบแต่งงานของเรานะ");
+    if (hr===21 && !S.events["anni"+d]){ S.events["anni"+d] = 1;
+      if (home && (S.inv.flower||0)>0){ S.inv.flower--; relGain(p.id,6,10); banner("สุขสันต์วันครบรอบ 💐", `${p.name}ดีใจมากที่คุณจำได้`, "gold"); }
+      else { const r = relOf(p.id); r.sulk = Math.min(3,(r.sulk||0)+1); r.feel = "น้อยใจ"; relGain(p.id,-2,-4); lineIn(p.id, "ลืมวันครบรอบเหรอ… 😢"); } }
+  }
+}
+
+/* ---------- free-space finder for event props ---------- */
+function freeSpot(cx, cz, w, d, rad){
+  for (let r=0; r<=rad; r+=3) for (let a=0; a<Math.PI*2; a+=Math.PI/8){ const x = cx + Math.cos(a)*r, z = cz + Math.sin(a)*r;
+    if (!COL.some(c=>x+w/2>c.x0-1 && x-w/2<c.x1+1 && z+d/2>c.z0-1 && z-d/2<c.z1+1) && !ROADS.some(q=>Math.abs(q-x)<7+w/2 || Math.abs(q-z)<7+d/2)) return {x, z}; }
+  return {x:cx, z:cz};
+}
+const BULB = [0xffd54a,0xff6b6b,0x6bd6ff,0x9cff6b,0xff9cf0].map(c=>new THREE.MeshBasicMaterial({color:c}));
+function stallRow(g, n, sp){
+  const tops = [0xd84040,0x2a7fd4,0xf2c230,0x3fa34d,0xf07a2a,0xffffff];
+  for (let i=0;i<n;i++){ const x = (i-(n-1)/2)*sp, c = tops[i%tops.length];
+    box(2.2,.9,1.2,0xb08a5e,x,.45,0,g); [-1,1].forEach(s=>[-1,1].forEach(t=>cyl(.04,.04,2.4,0x999999,x+s*1.05,1.2,t*.55,g,5)));
+    const r = box(2.5,.12,1.6,c,x,2.45,0,g); r.rotation.x = -.12; box(.5,.3,.4,pick([0xffe0b0,0xe86a3a,0x9b5a2a,0x7fbf5a]),x-.5,1.05,0,g,false); box(.4,.25,.3,pick([0xffffff,0xe0d040,0xc04070]),x+.4,1.03,.1,g,false); }
+  for (let i=0;i<n*4;i++){ const x = (i/(n*4-1)-.5)*(n*sp), b = new THREE.Mesh(gq("bulb",()=>new THREE.SphereGeometry(.08,6,4)), BULB[i%BULB.length]); b.position.set(x, 2.9 - Math.sin((i%4)/4*Math.PI)*.18, 1.1); g.add(b); }
+}
+// night market by the market (Tue / Thu / Sat evenings)
+const NM = freeSpot(MKT.x, MKT.z-20, 30, 6, 30), NMG = new THREE.Group(); NMG.position.set(NM.x, 0, NM.z); scene.add(NMG); stallRow(NMG, 8, 3.5); NMG.visible = false;
+{ const s = label("ตลาดนัดกลางคืน",{size:30, scale:.5, raw:true, bg:"rgba(216,64,64,.92)", color:"#fff"}); s.position.set(0,4.2,0); NMG.add(s); }
+const nmOpen = () => { const d = today(), wdN = dateOf(d).getDay(), md = minOfDay(); return [2,4,6].includes(wdN) && md>=18*60 && md<22*60; };
+// temple fair with a ferris wheel (Sat / Sun evenings)
+const TP = {x:-149, z:0}, TF = freeSpot(TP.x+6, TP.z+12, 22, 16, 18), TFG = new THREE.Group(); TFG.position.set(TF.x, 0, TF.z); scene.add(TFG); TFG.visible = false;
+const WHEEL = new THREE.Group(); WHEEL.position.set(6, 8.5, 6); WHEEL.rotation.y = Math.PI/2; TFG.add(WHEEL);
+{ [-1,1].forEach(s=>[-.6,.6].forEach(xx=>{ const lg = box(.25,9.6,.25,0xd0d4d8,6+xx,4.25,6+s*1.15,TFG); lg.rotation.x = -s*.5; }));
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(7, .12, 6, 40), mat(0xff5a7a)); WHEEL.add(rim);
+  for (let i=0;i<12;i++){ const a = i/12*Math.PI*2; const sp = box(.08,7,.08,0xffffff,Math.cos(a)*3.5,Math.sin(a)*3.5,0,WHEEL,false); sp.rotation.z = a+Math.PI/2;
+    const cab = new THREE.Group(); cab.position.set(Math.cos(a)*7, Math.sin(a)*7, 0); WHEEL.add(cab); cab.userData.cab = 1; box(1,.8,.8,[0xf2c230,0x2a7fd4,0xd84040,0x3fa34d][i%4],0,-.6,0,cab);
+    const b = new THREE.Mesh(gq("bulb",()=>new THREE.SphereGeometry(.08,6,4)), BULB[i%BULB.length]); b.position.set(Math.cos(a)*7.2, Math.sin(a)*7.2, .2); WHEEL.add(b); } }
+{ const r = new THREE.Group(); r.position.set(-6,0,8); TFG.add(r); stallRow(r, 5, 3.3); const s = label("งานวัดประจำปี",{size:30, scale:.5, raw:true, bg:"rgba(212,160,23,.95)", color:"#3a1a00"}); s.position.set(0,4.2,0); r.add(s); }
+const tfOpen = () => { const md = minOfDay(); return isWeekend(today()) && md>=17*60+30 && md<23*60; };
+INTER.push({x:NM.x, z:NM.z+2, r:9, label:()=>nmOpen() ? "ตลาดนัดกลางคืน — กิน ช้อป เล่นเกม" : "", act:()=>{ if (nmOpen()) openNight("nm"); }, hide:()=>!nmOpen()});
+INTER.push({x:TF.x, z:TF.z, r:12, label:()=>tfOpen() ? "งานวัด — ชิงช้าสวรรค์ ทำบุญ ดูหนังกลางแปลง" : "", act:()=>{ if (tfOpen()) openNight("tf"); }, hide:()=>!tfOpen()});
+function openNight(kind){
+  const L = lover(), nm = kind==="nm";
+  const acts = nm ? [["eat","🍢 กินลูกชิ้นปิ้ง ข้าวเหนียวหมูทอด",60],["gift","💐 ซื้อดอกไม้/ของขวัญ",150],["game","🎈 เกมปาลูกโป่ง ลุ้นตุ๊กตา",40],...(L?[["date","💞 ชวน"+L.name+"มาเดินตลาดด้วยกัน",200]]:[])]
+                   : [["merit","🙏 ทำบุญ ไหว้พระ",100],["wheel","🎡 นั่งชิงช้าสวรรค์"+(L?" กับ"+L.name:""),50],["movie","🎬 ดูหนังกลางแปลง",0],["dart","🎯 ปาเป้าลุ้นรางวัล",40]];
+  openModal(nm ? "ตลาดนัดกลางคืน" : "งานวัดประจำปี", nm ? "อังคาร พฤหัส เสาร์ 18:00–22:00" : "เสาร์–อาทิตย์ 17:30–23:00",
+    `<div class="rows">${acts.map(([k,t,c])=>`<button class="btn" style="text-align:left" data-act="night" data-arg="${k}">${t}${c?` · ${fmtB(c)}`:""}</button>`).join("")}</div>`, [{label:"ปิด", cls:"primary", fn:closeModal}]);
+}
+bodyActs.night = k => {
+  const L = lover(), cost = {eat:60,gift:150,game:40,date:200,merit:100,wheel:50,movie:0,dart:40}[k];
+  if (cost && !spend(cost, {eat:"ของกินตลาดนัด",gift:"ดอกไม้/ของขวัญ",game:"เกมปาลูกโป่ง",date:"เดินตลาดกับแฟน",merit:"ทำบุญ",wheel:"ชิงช้าสวรรค์",dart:"ปาเป้า"}[k])) return;
+  let msg = "";
+  if (k==="eat"){ advance(25); S.hunger = clamp(S.hunger+35,0,100); msg = "อร่อย! ลูกชิ้นน้ำจิ้มแซ่บ อิ่มท้อง"; }
+  if (k==="gift"){ advance(10); S.inv.flower = (S.inv.flower||0)+1; msg = "ได้ช่อดอกไม้สวยๆ มา 1 ช่อ ไว้ให้คนพิเศษ (ให้ได้ตอนคุย)"; }
+  if (k==="game" || k==="dart"){ advance(15); S.stress = clamp(S.stress-4,0,100); if (Math.random()<.35){ S.inv.flower = (S.inv.flower||0)+1; msg = "เย้! ได้ตุ๊กตาหมีมา 1 ตัว 🧸 (นับเป็นของขวัญ)"; } else msg = "พลาดไปนิดเดียว… ไว้ลองใหม่"; }
+  if (k==="date"){ advance(90, .3); S.stress = clamp(S.stress-12,0,100); relGain(L.id,3,7); msg = `เดินตลาดกับ${L.name} แชร์ขนมกันกิน ${L.name}ยิ้มทั้งคืน 💕`; }
+  if (k==="merit"){ advance(30); S.stress = clamp(S.stress-12,0,100); msg = "ทำบุญเสร็จแล้ว รู้สึกใจสงบขึ้นมาก 🙏"; }
+  if (k==="wheel"){ advance(25); S.stress = clamp(S.stress-8,0,100); if (L){ relGain(L.id,3,8); msg = `ขึ้นไปจุดสูงสุดพอดี เห็นไฟทั้งเมือง ${L.name}จับมือคุณแน่น 🎡💕`; } else msg = "วิวไฟทั้งเมืองสวยมาก"; }
+  if (k==="movie"){ advance(100, .2); S.stress = clamp(S.stress-10,0,100); msg = "หนังผีไทยกลางแปลง คนทั้งลานกรี๊ดพร้อมกัน 555"; }
+  sfx("coin"); openModal("สนุกจัง", "", `<p>${msg}</p>`, [{label:"ต่อ", fn:()=>openNight(k==="merit"||k==="wheel"||k==="movie"||k==="dart"?"tf":"nm")},{label:"ปิด", cls:"primary", fn:closeModal}]); save();
+};
+
+/* ---------- day trips ---------- */
+function beachPic(){ const c = document.createElement("canvas"); c.width = 560; c.height = 220; const g = c.getContext("2d");
+  const sky = g.createLinearGradient(0,0,0,120); sky.addColorStop(0,"#5ec8f0"); sky.addColorStop(1,"#bfe9f7"); g.fillStyle = sky; g.fillRect(0,0,560,120);
+  g.fillStyle = "#fff6c0"; g.beginPath(); g.arc(470,45,24,0,7); g.fill(); g.fillStyle = "#1e88b8"; g.fillRect(0,110,560,50);
+  g.fillStyle = "rgba(255,255,255,.6)"; for (let i=0;i<14;i++) g.fillRect(Math.random()*540, 115+Math.random()*40, 30, 2);
+  g.fillStyle = "#f2d9a0"; g.fillRect(0,155,560,65); [[90,"#e53935"],[230,"#1e88e5"],[380,"#fdd835"]].forEach(([x,col])=>{ g.fillStyle = "#777"; g.fillRect(x,120,3,70); g.fillStyle = col; g.beginPath(); g.moveTo(x-45,135); g.quadraticCurveTo(x+1,95,x+48,135); g.fill(); g.fillStyle = "#fafafa"; g.fillRect(x-25,180,50,8); });
+  g.fillStyle = "#5a3b1a"; g.fillRect(515,90,8,110); g.fillStyle = "#3f7d2a"; for (let i=0;i<6;i++){ g.save(); g.translate(519,90); g.rotate(i*1.05); g.beginPath(); g.ellipse(26,0,28,7,0,0,7); g.fill(); g.restore(); }
+  return c.toDataURL(); }
+function openTrip(){
+  const L = lover(), d = today(), md = minOfDay(), we = isWeekend(d), ok = we && md>=6*60 && md<12*60 && !S.events["trip"+d];
+  openModal("เที่ยว · พักผ่อน", "วันหยุดก็ต้องพักบ้าง ความเครียดลดลงเยอะ",
+    `<img src="${beachPic()}" alt="ทะเลบางแสน" style="width:100%;border-radius:12px;display:block">
+     <div class="rows" style="margin-top:10px">
+      <button class="btn ${ok?"primary":""}" style="text-align:left" data-act="trip" data-arg="beach">🏖 ไปเที่ยวทะเลบางแสนทั้งวัน · ${fmtB(900 + (L?600:0))}${L?` (ไปกับ${L.name})`:""}</button>
+      <button class="btn" style="text-align:left" data-act="trip" data-arg="mall">🎬 ดูหนังที่ห้าง เมกาบางนา · ${fmtB(L?500:250)}</button>
+      <button class="btn" style="text-align:left" data-act="trip" data-arg="mom">🏠 กลับบ้านไปหาแม่ · ${fmtB(300)}</button></div>
+     <p class="soft" style="margin-top:8px;font-size:12.5px">ทะเลบางแสน: เฉพาะเสาร์–อาทิตย์ ออกก่อนเที่ยง วันละครั้ง</p>`, [{label:"กลับ", cls:"primary", fn:openPhone}]);
+}
+bodyActs.trip = k => {
+  const L = lover(), d = today(), md = minOfDay();
+  if (k==="beach"){
+    if (!isWeekend(d) || md<6*60 || md>=12*60 || S.events["trip"+d]) return toast("ไปทะเลได้เฉพาะเสาร์–อาทิตย์ ออกก่อน 12:00 วันละครั้ง", "bad");
+    if (!spend(900 + (L?600:0), "เที่ยวทะเลบางแสน")) return;
+    S.events["trip"+d] = 1; closeModal(); fade(()=>{ advance(Math.max(60, 19*60-minOfDay()), .2); S.stress = clamp(S.stress-40,0,100); S.energy = clamp(S.energy-10,0,100); S.hunger = 70; if (L) relGain(L.id,5,15);
+      const m = $("modal"); openModal("ทะเลบางแสน 🏖", "กลับถึงบ้านตอนค่ำ", `<img src="${beachPic()}" alt="ทะเลบางแสน" style="width:100%;border-radius:12px"><p>${L ? `นั่งกินปูม้ากับ${L.name}ใต้ร่มชายหาด ลงเล่นน้ำ ถ่ายรูปคู่ตอนพระอาทิตย์ตก ความสัมพันธ์ดีขึ้นมาก 💕` : "นั่งรับลมทะเล กินอาหารทะเล นอนเปลใต้ต้นมะพร้าว"} · ความเครียดลดลง 40</p>`, [{label:"ปิด", cls:"primary", fn:closeModal}]); });
+    return; }
+  if (k==="mall"){ if (!spend(L?500:250, "ดูหนัง")) return; advance(180, .2); S.stress = clamp(S.stress-15,0,100); if (L) relGain(L.id,3,8); toast(L ? `ดูหนังกับ${L.name} แชร์ป๊อปคอร์นกัน 🍿💕` : "ดูหนังสนุกมาก ความเครียดลดลง", "good"); }
+  if (k==="mom"){ if (!spend(300, "ค่ารถกลับบ้านหาแม่")) return; advance(240, .2); S.stress = clamp(S.stress-20,0,100); S.hunger = 100; relGain("mom",6); toast("แม่ทำแกงส้มให้กิน ห่อกับข้าวให้กลับมาด้วย 🥹", "good"); }
+  save(); closeModal();
+};
+function fade(fn){ const f = $("fade"); if (!f){ fn(); return; } f.style.opacity = "1"; setTimeout(()=>{ fn(); f.style.opacity = "0"; }, 700); }
+
+/* ---------- team planning (lead / engineer) ---------- */
+const PLANS = {pm:{n:"PM ให้ครบ ≥ 95% ภายในสัปดาห์", bonus:2500}, mttr:{n:"MTTR ของสัปดาห์ ≤ 3 ชม.", bonus:2500}, cust:{n:"ปิดงานลูกค้า ≥ 4 ราย", bonus:2000}};
+function openPlan(){
+  if (!LEVELS[S.level].team) return openModal("แผนงานทีม", "", "<p>ต้องเป็น <b>หัวหน้าชุดบำรุงรักษา</b> ก่อนถึงจะวางแผนงานให้ทีมได้</p>", [{label:"กลับ", cls:"primary", fn:openPhone}]);
+  ensureTeam(); const wk = WK(today()), P = S.plan && S.plan.wk===wk ? S.plan : null;
+  const foc = {pm:"เน้น PM", cm:"เน้นงานซ่อม CM", free:"ให้เลือกเอง"};
+  openModal("แผนงานทีมประจำสัปดาห์", `สัปดาห์ที่ ${wk} · ลูกทีม ${S.team.length} คน`,
+    `<p><b>เป้าหมายทีม</b> ${P ? `(ตั้งแล้ว: ${esc(PLANS[P.goal].n)})` : "— เลือก 1 ข้อ ตรวจผลวันศุกร์ 17:00"}</p>
+     <div class="rows">${Object.entries(PLANS).map(([k,v])=>`<button class="btn ${P&&P.goal===k?"primary":""}" style="text-align:left" data-act="plan" data-arg="g:${k}" ${P?"disabled":""}>${esc(v.n)} · โบนัส ${fmtB(v.bonus)}</button>`).join("")}</div>
+     <p style="margin-top:12px"><b>มอบหมายหน้าที่</b> (ลูกทีมจะรับงานเองทุกเช้า 09:00 ตามหน้าที่)</p>
+     <div class="rows">${S.team.map((t,i)=>`<div class="row"><div><div class="n">${esc(t.name)}</div><div class="s">${t.wo?`กำลังทำ ${esc(t.wo)}`:"ว่าง"}</div></div><div style="display:flex;gap:4px;flex-wrap:wrap">${Object.entries(foc).map(([k,v])=>`<button class="btn sm ${(t.focus||"free")===k?"primary":""}" data-act="plan" data-arg="f:${i}:${k}">${v}</button>`).join("")}</div></div>`).join("")}</div>`,
+    [{label:"กลับ", cls:"primary", fn:openPhone}]);
+}
+bodyActs.plan = a => { const p = a.split(":");
+  if (p[0]==="g"){ S.plan = {wk:WK(today()), goal:p[1], c0:S.custDone}; toast(`ตั้งเป้าหมายทีม: ${PLANS[p[1]].n}`, "good"); lineIn("team", `${meName()} (หัวหน้าชุด): สัปดาห์นี้เป้าหมายทีมคือ ${PLANS[p[1]].n} ลุยกันครับ 💪`, true); }
+  else { S.team[+p[1]].focus = p[2]; }
+  save(); openPlan(); };
+function teamHour(hr, d){
+  if (!LEVELS[S.level].team || isWeekend(d)) return;
+  if (hr===9) S.team.forEach(t=>{ if (t.wo || !t.focus || t.focus==="free") return;
+    const w = S.wos.filter(w=>w.status==="open" || w.status==="accepted").filter(w=>t.focus==="pm" ? w.kind==="PM" : (w.kind==="CM" && w.hasPart && !w.fail)).sort((a,b)=>a.due-b.due)[0];
+    if (w){ t.wo = w.code; t.until = absMin() + RI(120,240); w.status = "team"; w.teamBy = t.name; lineIn("team", `${t.name}: รับ ${w.code} ตามแผนครับหัวหน้า`, true); } });
+  if (hr===17 && dateOf(d).getDay()===5 && S.plan && S.plan.wk===WK(d) && !S.plan.done){
+    const P = S.plan, G = PLANS[P.goal]; let ok = false, got = "";
+    const pmw = (()=>{ const lo = d-4, pm = S.wos.filter(w=>w.kind==="PM" && w.due>=lo && w.due<=d); return pm.length ? pm.filter(w=>w.status==="done").length/pm.length*100 : 100; })();
+    const rep = S.fails.filter(f=>f.end && dayOf(f.end)>=d-4), mttr = rep.length ? rep.reduce((s,f)=>s+(f.end-f.start)/60,0)/rep.length : 0;
+    if (P.goal==="pm"){ ok = pmw>=95; got = pmw.toFixed(0)+"%"; } else if (P.goal==="mttr"){ ok = mttr<=3; got = mttr.toFixed(1)+" ชม."; } else { const n = S.custDone - P.c0; ok = n>=4; got = n+" ราย"; }
+    P.done = true;
+    if (ok){ earn(G.bonus, "โบนัสทีมทำเป้าสัปดาห์สำเร็จ"); relGain("boss",6); S.xp += 20; banner("ทีมทำเป้าสำเร็จ!", `${G.n} · ได้ ${got}`, "gold"); }
+    else { relGain("boss",-3); banner("ทีมพลาดเป้าสัปดาห์นี้", `${G.n} · ได้ ${got}`, "red"); }
+  }
+}
+
+/* ---------- personal stats dashboard ---------- */
+function openStats(){
+  const d = today(), N = 14, days = [...Array(N)].map((_,i)=>d-N+1+i);
+  const pmDone = days.map(x=>S.wos.filter(w=>w.kind==="PM" && w.status==="done" && w.doneAt!=null && dayOf(w.doneAt)===x).length);
+  const fails = days.map(x=>S.fails.filter(f=>dayOf(f.start)===x).length);
+  const rep = S.fails.filter(f=>f.end), mttr = rep.length ? rep.reduce((s,f)=>s+(f.end-f.start)/60,0)/rep.length : null;
+  const span = Math.max(1, absMin()/60), mtbf = S.fails.length ? span*EQUIP.length/S.fails.length : null;
+  const pmAll = S.wos.filter(w=>w.kind==="PM" && (w.due<d || w.status==="done")), comp = pmAll.length ? pmAll.filter(w=>w.status==="done" && !w.late).length/pmAll.length*100 : null;
+  const k = (l,v,t,c="") => `<div class="kpi"><div class="l">${l}</div><div class="v ${c}">${v}</div><div class="t soft">${t}</div></div>`;
+  openModal("สถิติของฉัน", `ตั้งแต่เริ่มงาน ${today()+1} วัน`,
+    `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">
+      ${k("MTTR เฉลี่ย", mttr==null?"–":mttr.toFixed(1)+" ชม.", `ซ่อมแล้ว ${rep.length} ครั้ง · เป้า ≤ 4`, mttr==null?"":mttr<=4?"ok":"bad")}
+      ${k("MTBF", mtbf==null?"–":Math.round(mtbf).toLocaleString()+" ชม.", `${EQUIP.length} อุปกรณ์ · เสีย ${S.fails.length} ครั้ง`)}
+      ${k("PM ตรงเวลา", comp==null?"–":comp.toFixed(0)+"%", `${pmAll.length} ใบที่ถึงกำหนด · เป้า ≥ 90`, comp==null?"":comp>=90?"ok":"bad")}
+      ${k("ความถูกต้องรายงาน", S.stats.reports?Math.round(S.stats.correct/S.stats.reports*100)+"%":"–", `${S.stats.correct}/${S.stats.reports}`)}
+      ${k("งานลูกค้า", S.custDone, "ราย")}${k("สถานีย่อย", S.subDone, "ครั้ง")}
+      ${k("ร้องเรียน", S.complaints, "ครั้งสะสม", S.complaints>10?"bad":"")}${k("อุบัติเหตุ", S.stats.accidents, "ครั้ง", S.stats.accidents?"bad":"ok")}</div>
+     <p style="margin-top:12px"><b>14 วันล่าสุด</b> · <span style="color:#5fcf4a">■</span> PM ที่ปิด <span style="color:#ff6b6b">■</span> ไฟดับ</p>
+     <canvas id="stCv" width="600" height="190" style="width:100%;height:auto;display:block;background:rgba(255,255,255,.04);border-radius:10px"></canvas>`,
+    [{label:"กลับ", cls:"primary", fn:openPhone}]);
+  const cv = $("stCv"), g = cv && cv.getContext && cv.getContext("2d"); if (!g) return;
+  const mx = Math.max(2, ...pmDone, ...fails), W = 600, H = 190, bw = (W-40)/N;
+  g.strokeStyle = "rgba(255,255,255,.12)"; for (let i=0;i<=mx;i++){ const y = H-24 - i/mx*(H-40); g.beginPath(); g.moveTo(30,y); g.lineTo(W-6,y); g.stroke(); }
+  g.fillStyle = "#9aa4b1"; g.font = "11px sans-serif"; g.fillText(mx, 8, 22); g.fillText("0", 14, H-22);
+  days.forEach((x,i)=>{ const X = 34 + i*bw; const h1 = pmDone[i]/mx*(H-40), h2 = fails[i]/mx*(H-40);
+    g.fillStyle = "#5fcf4a"; g.fillRect(X, H-24-h1, bw*.4, h1); g.fillStyle = "#ff6b6b"; g.fillRect(X+bw*.44, H-24-h2, bw*.4, h2);
+    g.fillStyle = "#9aa4b1"; g.fillText(dateOf(x).getDate(), X+2, H-8); });
+}
+
+/* ---------- monsoon (hard) mode ---------- */
+function monsoonHour(hr, d){
+  if (!S.monsoon) return;
+  if (hr===17 && !isWeekend(d) && S.clockIn[d]!=null && !S.events["mon"+d]){ S.events["mon"+d] = 1; earn(200, "เบี้ยเลี้ยงงานฤดูฝน (โหมดฝนหนัก)"); }
+}
+var openGfxV6 = openGfx;
+openGfx = function(){ openGfxV6(); const b = $("mBody"); if (!b) return;
+  b.insertAdjacentHTML("beforeend", `<p style="margin-top:14px"><b>โหมดเกม</b></p><button class="btn ${S.monsoon?"primary":""}" style="text-align:left;width:100%" data-act="monsoon">🌧 โหมดฤดูฝนหนัก (ยาก): ฝนตกบ่อย 3 เท่า ไฟดับถี่ขึ้น ได้เบี้ยเลี้ยงวันละ ฿200 — ${S.monsoon?"เปิดอยู่":"ปิดอยู่"}</button>`); };
+bodyActs.monsoon = () => { S.monsoon = !S.monsoon; toast(S.monsoon ? "เปิดโหมดฤดูฝนหนัก — ระวังตัวด้วย!" : "ปิดโหมดฤดูฝนหนัก"); save(); openGfx(); };
+
+/* ---------- monthly money: interest, loans, insurance ---------- */
+function moneyHour(hr, d){
+  if (hr!==8 || dateOf(d).getDate()!==1 || S.events["mm"+d]) return; S.events["mm"+d] = 1;
+  if (S.bank>0){ const it = Math.round(S.bank*.015/12); if (it){ S.bank += it; S.log.unshift({t:absMin(), n:it, why:"ดอกเบี้ยเงินฝาก"}); } }
+  S.loans.forEach(l=>{ S.money -= l.amt; l.left--; S.log.unshift({t:absMin(), n:-l.amt, why:`ค่างวด${l.n}`}); });
+  S.loans = S.loans.filter(l=>l.left>0);
+  if (S.insure){ S.money -= 450; S.log.unshift({t:absMin(), n:-450, why:"เบี้ยประกันสุขภาพ"}); }
+  if (S.loans.length || S.insure) toast("หักค่างวดและเบี้ยประกันประจำเดือนแล้ว", "bad");
+}
+function v7Hour(hAbs){ const hr = hAbs%24, d = Math.floor(hAbs/24); spouseHour(hr, d); teamHour(hr, d); monsoonHour(hr, d); moneyHour(hr, d); }
+function v7Tick(dt){
+  const nm = nmOpen(), tf = tfOpen(); if (NMG.visible !== nm) NMG.visible = nm; if (TFG.visible !== tf) TFG.visible = tf;
+  if (tf){ WHEEL.rotation.z += dt*.12; WHEEL.children.forEach(c=>{ if (c.userData.cab) c.rotation.z = -WHEEL.rotation.z; }); }
+}
+
+V7READY = true;
 // title screen
 {
   const sp = $("splash"), go = $("spGo"); paused = true;
